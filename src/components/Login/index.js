@@ -1,15 +1,15 @@
-import { useState } from "react";
-import { Button, Form, Input } from "antd";
-import { Container, Row, Col, Spinner, Image } from "react-bootstrap";
+import React, { useState } from "react";
+import { Button, Form, Input, Card, Alert } from "antd";
+import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { validaEmail, validaClave } from "../../utils/validations/validation";
 import Cookies from "js-cookie";
 import { setToken, setDataToken } from "../../helpers/helpers";
-import MsgError from "../../components/Messages/MsgError";
 import "./Login.css";
-import { Link } from "react-router-dom";
 import { redirectBase } from "../../helpers/redirect";
-import ImageLogo from "../../images/IPAAT-10-anios.png";
 import loginAPI from "../../utils/authentication/login.js";
+
+import IpaatLogo from '../../images/IPAAT-logos-horizontal.png';
+import MinEconProdLogo from '../../images/MinEconomia-color.png'
 
 export const COOKIES = {
   authToken: "token-ipaat-v2",
@@ -18,46 +18,35 @@ export const COOKIES = {
 
 const Login = ({ banderaLogin, setBanderaLogin }) => {
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  const [dataError, setDataError] = useState(false);
-  const [msgDataError, setMsgDataError] = useState("");
-  const [errorServer, setErrorServer] = useState(false);
-  const [errorValid, setErrorValid] = useState(false);
+  const onFinish = async (values) => {
+    setLoading(true);
+    setError('');
 
-  const handleSubmit = (values) => {
     try {
-      if (validaEmail(values.email) && validaClave(values.clave)) {
-        login(values);
+      console.log(values)
+      if (validaClave(values.clave)) {
+        login(values)
       } else {
-        setErrorValid(true);
-        setTimeout(() => {
-          setErrorValid(false);
-        }, 3000);
+        setError('Ingrese un email y clave válida.');
+        setLoading(false);
       }
     } catch (error) {
-      setErrorServer(true);
-      setTimeout(() => {
-        setErrorServer(false);
-      }, 3000);
+      setError('Error de conexión. Por favor, intente más tarde.');
+    } finally {
+      setLoading(false);
     }
   };
 
-  const claveCookie =  process.env.REACT_APP_API ? process.env.REACT_APP_API : process.env.REACT_APP_PRODUCTION
+  const claveCookie = process.env.REACT_APP_API ? process.env.REACT_APP_API : process.env.REACT_APP_PRODUCTION
   const login = async (values) => {
     try {
-    
       const res = await loginAPI(values);
       if (res.status === 200) {
-        const {
-          token,
-          user: { id },
-        } = res.data;
-        Cookies.set(COOKIES.authToken, token, claveCookie, {
-          expires: 1,
-        });
-        Cookies.set(COOKIES.authId, id, claveCookie, {
-          expires: 1,
-        });
+        const { token, user: { id } } = res.data;
+        Cookies.set(COOKIES.authToken, token, claveCookie, { expires: 1 });
+        Cookies.set(COOKIES.authId, id, claveCookie, { expires: 1 });
         setToken(res?.data?.token);
         setDataToken(res?.data?.user);
 
@@ -69,123 +58,101 @@ const Login = ({ banderaLogin, setBanderaLogin }) => {
         redirectBase("admin/parte-diario");
       }
       if (res?.response?.status === 404) {
-        setDataError(true);
-        setMsgDataError(res?.response?.data?.error);
+        setError(true);
         setTimeout(() => {
-          setDataError(false);
+          setError(false);
         }, 3000);
       }
-    } catch (error) {}
+    } catch (error) {
+      setError('Error en el servidor. Por favor, intente más tarde.')
+    }
+    finally {
+      setLoading(false)
+    }
   };
+
 
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
   };
 
   return (
-    <div className={`containerLogin`}>
-      <Container>
-        <Row className="justify-content-center align-items-center">
-          <Col xs={10} sm={8} md={6} className={`containerForm`}>
-            <div
-              className={`d-flex justify-content-between align-items-center pb-4`}
-            >
-              <div className="">
-                <h2 className={`titleLogin text-center mb-0`}>Inciar sesión</h2>
-              </div>
-              <div>
-                <Link to="/login" target="_parent">
-                  <Image
-                    src={ImageLogo}
-                    alt="IPAAT-10-anios"
-                    height="70"
-                    width="70"
-                  />
-                </Link>
-              </div>
-            </div>
+    <div className="login-container">
+      <div className="login-wrapper">
+        <Card className="login-card" bordered={false}>
+          <div className="login-header">
+            <img src={IpaatLogo} alt="Logo IPAAT" className="login-logo-main" />
+            <h1 className="login-title">Sistema de Gestión</h1>
+            <p className="login-subtitle">Partes Diarios y DDJJ</p>
+          </div>
+
+          <div className="login-form-wrapper">
+            <h2 className="login-form-title">Iniciar Sesión</h2>
             <Form
-              name="basic"
-              labelCol={{ span: 5 }}
-              wrapperCol={{ span: 22 }}
-              initialValues={{ remember: true }}
-              // onSubmit={handleSubmit}
-              onFinish={handleSubmit}
+              name="login_form"
+              onFinish={onFinish}
               onFinishFailed={onFinishFailed}
               autoComplete="off"
+              layout="vertical"
+              size="large"
             >
               <Form.Item
-                label="Usuario"
                 name="email"
+                label="Email"
                 rules={[
-                  {
-                    required: true,
-                    message: "Debe ingresar un email!",
-                  },
+                  { required: true, message: 'Por favor ingrese su usuario' },
+                  { type: 'text', message: 'El usuario no es válido' }
                 ]}
               >
-                <Input />
+                <Input
+                  prefix={<UserOutlined className="input-icon" />}
+                  placeholder="Ingrese su usuario"
+                />
               </Form.Item>
 
               <Form.Item
-                label="Clave"
                 name="clave"
+                label="Contraseña"
                 rules={[
-                  { required: true, message: "Debe ingresar su clave!" },
-                  {
-                    max: 14,
-                    message: "Hasta 14 caracteres",
-                  },
-                  {
-                    min: 8,
-                    message: "Minimo 8 caracteres",
-                  },
+                  { required: true, message: 'Por favor ingrese su contraseña' },
+                  { min: 8, message: 'La contraseña debe tener al menos 8 caracteres' }
                 ]}
               >
-                <Input.Password />
+                <Input.Password
+                  prefix={<LockOutlined className="input-icon" />}
+                  placeholder="Ingrese su contraseña"
+                />
               </Form.Item>
 
-              <Form.Item
-                wrapperCol={{ offset: 1, span: 22 }}
-                className="text-center pt-4"
-              >
-                {loading ? (
-                  <Button disabled type="primary" htmlType="submit">
-                    <Spinner
-                      as="span"
-                      animation="border"
-                      size="sm"
-                      role="status"
-                      aria-hidden="true"
-                    />
-                    <span className="ms-2">Ingresando</span>
-                  </Button>
-                ) : (
-                  <Button type="primary" htmlType="submit">
-                    Ingresar
-                  </Button>
-                )}
+              {error && (
+                <Alert
+                  message={error}
+                  type="error"
+                  showIcon
+                  className="login-alert"
+                  closable
+                  onClose={() => setError('')}
+                />
+              )}
+
+              <Form.Item className="login-button-wrapper">
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  className="login-form-button"
+                  block
+                  loading={loading}
+                >
+                  {loading ? 'Ingresando...' : 'Ingresar'}
+                </Button>
               </Form.Item>
             </Form>
-          </Col>
-        </Row>
-      </Container>
-      <div className={`justify-content-center align-items-center alert`}>
-        {dataError && (
-          <MsgError text1="Datos incorrectos." text2={msgDataError} />
-        )}
-        {errorValid && (
-          <MsgError
-            text1="Datos incorrectos."
-            text2="Ingrese un mail y clave valida."
-          />
-        )}
-        {errorServer && (
-          <MsgError
-            text1="Hubo un problema en el servidor."
-            text2="Intente mas tarde"
-          />
-        )}
+          </div>
+
+          <div className="login-footer">
+            <img src={MinEconProdLogo} alt="Logo Ministerio" className="login-footer-logo" />
+          </div>
+        </Card>
       </div>
     </div>
   );
