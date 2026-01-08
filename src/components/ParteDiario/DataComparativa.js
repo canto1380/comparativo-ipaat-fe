@@ -1593,6 +1593,7 @@ export const dataComparativaPorTipo = (
       }
       if ((dataEnd.getFullYear() - 1 === 2025) && mes.anio === 2025 && mes.mesNumero === currentMonth) {
         // Si es el mes actual, solo hasta el día actual
+        let valorPorDia = mes.valor
         valorPorDia = valorPorDia + (mes.valor / 30) * currentDay;
         h11 = h11 + valorPorDia;
         dataLeales = {
@@ -1636,6 +1637,7 @@ export const dataComparativaPorTipo = (
       }
       if ((dataEnd.getFullYear() - 1 === 2025) && mes.anio === 2025 && mes.mesNumero === currentMonth) {
         // Si es el mes actual, solo hasta el día actual
+        let valorPorDia = mes.valor
         valorPorDia = valorPorDia + (mes.valor / 30) * currentDay;
         h4 = h4 + valorPorDia;
         dataConcepcion = {
@@ -1679,6 +1681,7 @@ export const dataComparativaPorTipo = (
       }
       if ((dataEnd.getFullYear() - 1 === 2025) && mes.anio === 2025 && mes.mesNumero === currentMonth) {
         // Si es el mes actual, solo hasta el día actual
+        let valorPorDia = mes.valor
         valorPorDia = valorPorDia + (mes.valor / 30) * currentDay;
         h6 = h6 + valorPorDia;
         dataBellaVista = {
@@ -1927,7 +1930,6 @@ export const dataComparativaPorTipo = (
         ? ultimoRegistrosLaFlorida
         : new Date(newDateComparativo))
       : new Date(newDateComparativo)
-
     /** LaProvidencia **/
     const ultimoRegistrosLaProvidencia = new Date(dataInicioIngenios.CellR20) >= new Date(dataInicioIngenios.CellS20)
       ? new Date(dataInicioIngenios.CellR20)
@@ -2091,7 +2093,7 @@ export const dataComparativaPorTipo = (
     }
 
     if (data.ingenioNombre === "La Florida"
-      && newDate < fechaParametroLaFlorida
+      && newDate <= fechaParametroLaFlorida
       && newDate >= new Date(dataInicioIngenios.Cell12)
     ) {
       a3 = a3 + data.moliendaCanaBruta;

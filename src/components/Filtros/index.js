@@ -250,6 +250,7 @@ const Filtros = ({
   const handleItemsComparativoFinal = value => {
     setItemsComaprativosZafra(value)
   };
+  console.log(dataZafra)
 
   return (
     <div className={`${fixedComponent ? 'position-sticky top-0 bg-white' : ''} `} style={{ zIndex: 1000 }}>

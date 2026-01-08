@@ -1013,6 +1013,7 @@ export const dataPorTipo = (
       newDate <= fechaParametroConcepcion &&
       newDate >= new Date(dataInicioDestileriaIngenios.concepInicio)
     ) {
+      // console.log(`concepcion:: ${data.fechaParte} --- ${data.alcoholProducido} `)
       g4 = g4 + data.alcoholProducido;
       o4 = o4 + data.alcoholHidratado || 0;
       dataConcepcion = {
@@ -1162,6 +1163,8 @@ export const dataPorTipo = (
       };
     }
   });
+
+  console.log(dataConcepcion.N14)
   alcoholPanel =
     dataAguilares.N10 +
     dataDestBellaVista.N27 +

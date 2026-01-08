@@ -44,7 +44,7 @@ export const itemsRportes = (props = {}) => {
         routeAPI,
 
     } = props;
-
+    console.log(anioZafra)
     return [
         {
             key: '1',
