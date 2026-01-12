@@ -1,18 +1,20 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import { Modal } from 'antd'
-import { deleteCookies, deleteToken } from '../../helpers/helpers'
 import { redirectBase } from '../../helpers/redirect'
+import { User } from '../../context/UserProvider'
 
 const Unauthorized = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
-  deleteCookies()
-  deleteToken()
+  const { logout } = useContext(User)
+  
   const redirectLogin = async () => {
     redirectBase('login')
   }
+  
   useEffect(() => {
     setIsModalOpen(true)
-  }, [])
+    logout()
+  }, [logout])
   return (
     <div>
       <>

@@ -14,12 +14,11 @@ import { TbBrandDjango } from "react-icons/tb";
 
 import './Sidebar.css'
 import {
-  deleteCookies,
-  deleteToken,
   getDataToken,
 } from '../../../helpers/helpers'
 import { Link, useLocation } from 'react-router-dom'
 import { SidebarContext } from '../../../context/SidebarProvider';
+import { User } from '../../../context/UserProvider';
 
 const Sidebar = ({ inactivo, tokenAuth, dataUser }) => {
   const [initial, setInitial] = useState('')
@@ -27,6 +26,7 @@ const Sidebar = ({ inactivo, tokenAuth, dataUser }) => {
   const [nick, setNick] = useState('')
 
   const { changeStatus } = useContext(SidebarContext)
+  const { logout } = useContext(User)
   const location = useLocation()
 
   const changeOnSubmit = (e) => {
@@ -35,16 +35,17 @@ const Sidebar = ({ inactivo, tokenAuth, dataUser }) => {
 
   useEffect(() => {
     const data = getDataToken()
+    console.log('data: ', data)
     const a = data?.nombre?.toUpperCase()
     const b = data?.apellido?.toUpperCase()
     setInitial(a?.substr(0, 1))
     setInitialSurname(b?.substr(0, 1))
-    setNick(data?.nickname)
+    setNick(data?.nombre)
   }, [dataUser])
 
+  console.log('dataUser: ', dataUser)
   const cerrarSesion = async (e) => {
-    deleteToken()
-    deleteCookies()
+    logout()
     window.location.href = '/admin/login'
   }
 

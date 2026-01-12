@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Button, Form, Input, Card, Alert } from "antd";
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { validaEmail, validaClave } from "../../utils/validations/validation";
 import Cookies from "js-cookie";
-import { setToken, setDataToken } from "../../helpers/helpers";
 import "./Login.css";
 import { redirectBase } from "../../helpers/redirect";
 import loginAPI from "../../utils/authentication/login.js";
+import { User } from "../../context/UserProvider";
 
 import IpaatLogo from '../../images/IPAAT-logos-horizontal.png';
 import MinEconProdLogo from '../../images/MinEconomia-color.png'
@@ -19,13 +19,13 @@ export const COOKIES = {
 const Login = ({ banderaLogin, setBanderaLogin }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const { login: loginContext } = useContext(User);
 
   const onFinish = async (values) => {
     setLoading(true);
     setError('');
 
     try {
-      console.log(values)
       if (validaClave(values.clave)) {
         login(values)
       } else {
@@ -44,11 +44,15 @@ const Login = ({ banderaLogin, setBanderaLogin }) => {
     try {
       const res = await loginAPI(values);
       if (res.status === 200) {
-        const { token, user: { id } } = res.data;
+        const { token, user } = res.data;
+        const { id } = user;
+        
+        // Guardar en cookies
         Cookies.set(COOKIES.authToken, token, claveCookie, { expires: 1 });
         Cookies.set(COOKIES.authId, id, claveCookie, { expires: 1 });
-        setToken(res?.data?.token);
-        setDataToken(res?.data?.user);
+        
+        // Actualizar el contexto con los datos del usuario
+        loginContext(token, user);
 
         setLoading(true);
         setTimeout(() => {
@@ -97,8 +101,8 @@ const Login = ({ banderaLogin, setBanderaLogin }) => {
               size="large"
             >
               <Form.Item
-                name="email"
-                label="Email"
+                name="usuario"
+                label="Usuario"
                 rules={[
                   { required: true, message: 'Por favor ingrese su usuario' },
                   { type: 'text', message: 'El usuario no es válido' }

@@ -21,10 +21,11 @@ const FormAddEditUsuarios = ({ tokenAuth, routerAPI, dataRegisterEdit }) => {
       }, 3000);
     }
   };
+  console.log(dataRegisterEdit[0])
   const updateUser = async (values) => {
     const res = await api(
       "PATCH",
-      `${routerAPI}/${dataRegisterEdit[0]?.id}`,
+      `${routerAPI}/${dataRegisterEdit?.id}`,
       values,
       tokenAuth
     );
@@ -84,9 +85,9 @@ const FormAddEditUsuarios = ({ tokenAuth, routerAPI, dataRegisterEdit }) => {
         onFinish={handleSubmit}
         onFinishFailed={onFinishFailed}
         initialValues={{
-          nombre: dataRegisterEdit[0]?.nombre,
-          apellido: dataRegisterEdit[0]?.apellido,
-          email: dataRegisterEdit[0]?.email,
+          nombre: dataRegisterEdit?.nombre,
+          apellido: dataRegisterEdit?.apellido,
+          email: dataRegisterEdit?.email,
         }}
         disabled={!editBand && true}
       >

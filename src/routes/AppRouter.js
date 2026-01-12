@@ -8,7 +8,7 @@ import { User } from "../context/UserProvider";
 const AppRouter = () => {
   const [banderaLogin, setBanderaLogin] = useState(false);
   const { state } = useContext(User);
-  
+    console.log(state)
   return (
     <div>
       <Router>
@@ -17,7 +17,7 @@ const AppRouter = () => {
             <Route path='*' element={<Navigate to='/login' replace />} />
           )} */}
 
-          {!state || state.userToken.length === 0 ? (
+          {!state || !state.token || state.userToken === '' ? (
             <Route
               path="/*"
               element={

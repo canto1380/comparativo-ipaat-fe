@@ -6,6 +6,7 @@ export const COOKIES = {
 
 const login = async (userLogin) => {
   try {
+    console.log('userLogin: ', userLogin)
     const res = await api('POST', 'signin', userLogin)
 
     return res
