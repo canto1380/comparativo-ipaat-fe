@@ -6,6 +6,7 @@ export const validaEmail = (email) => {
 }
 
 export const validaClave = (clave) => {
+  console.log(claveER.test(clave))
   if(clave.trim() !== '' && claveER.test(clave)) return true
     return false
 }

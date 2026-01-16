@@ -1603,6 +1603,7 @@ export const dataComparativaPorTipo = (
         };
       }
     });
+    console.log(dataLeales)
 
     // Concepción - Zafra 2024
     anhidroConcepcion.forEach((mes) => {

@@ -119,7 +119,7 @@ const Login = ({ banderaLogin, setBanderaLogin }) => {
                 label="Contraseña"
                 rules={[
                   { required: true, message: 'Por favor ingrese su contraseña' },
-                  { min: 8, message: 'La contraseña debe tener al menos 8 caracteres' }
+                  { min: 6, message: 'La contraseña debe tener al menos 6 caracteres' }
                 ]}
               >
                 <Input.Password
