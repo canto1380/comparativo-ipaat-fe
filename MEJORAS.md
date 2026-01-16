@@ -1,0 +1,3 @@
+- Mejora componente login para que se adapte a distintos tamanos de monitores
+- Mejora en la sincronizacion de datos de Partes Diarios. Al actualizar los datos, si la sincronizacion es correcta, no es necesario recargar la pagina para tenerlos a disposicion
+- Mejoras en la sincronizacion de DDJJ. Al actualizar las DDJJ, si una declaracion ya existia pero habia cambiado el estado, no se actualizaba. Ahora si ya existe en la db, revisa si cambio el estado, si cambio, lo actualiza

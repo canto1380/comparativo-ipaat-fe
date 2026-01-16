@@ -267,6 +267,7 @@ const ParteDiarioContainer = () => {
 
       if (data.status === 200) {
         toast.success(data?.data?.message);
+        await getDataParteDiarios()
 
         // Si es exitoso, actualizar partes diarios del Norte
         try {
@@ -274,6 +275,7 @@ const ParteDiarioContainer = () => {
 
           if (dataNorte.status === 200) {
             toast.success("Partes diarios del Norte actualizados correctamente");
+            await getDataParteDiariosNorte()
           } else {
             toast.error(`Error al actualizar partes diarios del Norte: ${dataNorte?.response?.data?.error || 'Error desconocido'}`);
           }

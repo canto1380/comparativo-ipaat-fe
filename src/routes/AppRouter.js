@@ -8,7 +8,7 @@ import { User } from "../context/UserProvider";
 const AppRouter = () => {
   const [banderaLogin, setBanderaLogin] = useState(false);
   const { state } = useContext(User);
-    console.log(state)
+
   return (
     <div>
       <Router>

@@ -91,7 +91,7 @@ const Login = ({ banderaLogin, setBanderaLogin }) => {
           </div>
 
           <div className="login-form-wrapper">
-            <h2 className="login-form-title">Iniciar Sesión</h2>
+            <h2 className="login-form-title">Bienvenido</h2>
             <Form
               name="login_form"
               onFinish={onFinish}
