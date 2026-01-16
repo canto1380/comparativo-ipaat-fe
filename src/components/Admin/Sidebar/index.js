@@ -35,7 +35,6 @@ const Sidebar = ({ inactivo, tokenAuth, dataUser }) => {
 
   useEffect(() => {
     const data = getDataToken()
-    console.log('data: ', data)
     const a = data?.nombre?.toUpperCase()
     const b = data?.apellido?.toUpperCase()
     setInitial(a?.substr(0, 1))
@@ -43,7 +42,6 @@ const Sidebar = ({ inactivo, tokenAuth, dataUser }) => {
     setNick(data?.nombre)
   }, [dataUser])
 
-  console.log('dataUser: ', dataUser)
   const cerrarSesion = async (e) => {
     logout()
     window.location.href = '/admin/login'

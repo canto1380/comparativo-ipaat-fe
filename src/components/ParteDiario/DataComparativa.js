@@ -1547,7 +1547,6 @@ export const dataComparativaPorTipo = (
       };
     }
   });
-
   // Agregar anhidro por documento para años 2024 y 2023
   if (zafraParteDiario - 1 === 2024 && dataEnd !== null) {
     const currentDate = dataEnd !== null ? new Date(dataEnd) : new Date();  // Muestra fecha actual
@@ -1558,142 +1557,104 @@ export const dataComparativaPorTipo = (
     const currentMonth = currentDate.getMonth() + 1; // getMonth() devuelve 0-11 ----- Mes de comparativa
     const currentDay = currentDate.getDate();
 
-
-
-    // Leales - Zafra 2024
     anhidroLeales.forEach((mes) => {
-      if ((dataEnd.getFullYear() - 1 === 2024) && mes.anio === 2024 && mes.mesNumero < currentMonth) {
-        let valorPorDia = mes.valor
-        h11 = h11 + valorPorDia
-        dataLeales = {
-          AH22: h11,
-          AA22: dataLeales.AA22,
-          AG22: dataLeales.AG22
-        };
+      // Mes completamente anterior a la fecha fin
+      if (
+        mes.anio < anioData ||
+        (mes.anio === anioData && mes.mesNumero < currentMonth)
+      ) {
+        h11 += mes.valor;
+        console.log(
+          `SUMA COMPLETA → ${mes.mesNumero}/${mes.anio}: ${mes.valor}`
+        );
       }
-      if ((dataEnd.getFullYear() - 1 === 2024) && mes.anio === 2024 && mes.mesNumero === currentMonth) {
-        // Si es el mes actual, solo hasta el día actual
-        let valorPorDia
-        valorPorDia = (mes.valor / 30) * currentDay;
-        h11 = h11 + valorPorDia;
-        dataLeales = {
-          AH22: h11,
-          AA22: dataLeales.AA22,
-          AG22: dataLeales.AG22
-        };
+
+      // Mes actual (mismo año y mes)
+      else if (
+        mes.anio === anioData &&
+        mes.mesNumero === currentMonth
+      ) {
+        const valorProporcional = (mes.valor / 30) * currentDay;
+        h11 += valorProporcional;
+        console.log(
+          `SUMA PROPORCIONAL → ${mes.mesNumero}/${mes.anio}: ${valorProporcional}`
+        );
       }
-      if ((dataEnd.getFullYear() - 1 === 2025) && mes.anio === 2025 && mes.mesNumero < currentMonth) {
-        let valorPorDia = mes.valor
-        h11 = h11 + valorPorDia
-        dataLeales = {
-          AH22: h11,
-          AA22: dataLeales.AA22,
-          AG22: dataLeales.AG22
-        };
-      }
-      if ((dataEnd.getFullYear() - 1 === 2025) && mes.anio === 2025 && mes.mesNumero === currentMonth) {
-        // Si es el mes actual, solo hasta el día actual
-        let valorPorDia = mes.valor
-        valorPorDia = valorPorDia + (mes.valor / 30) * currentDay;
-        h11 = h11 + valorPorDia;
-        dataLeales = {
-          AH22: h11,
-          AA22: dataLeales.AA22,
-          AG22: dataLeales.AG22
-        };
-      }
+
     });
-    console.log(dataLeales)
+
+    dataLeales = {
+      AH22: h11,
+      AA22: dataLeales.AA22,
+      AG22: dataLeales.AG22
+    };
 
     // Concepción - Zafra 2024
     anhidroConcepcion.forEach((mes) => {
-      if ((dataEnd.getFullYear() - 1 === 2024) && mes.anio === 2024 && mes.mesNumero < currentMonth) {
-        let valorPorDia = mes.valor
-        h4 = h4 + valorPorDia
-        dataConcepcion = {
-          AH14: h4,
-          AA14: dataConcepcion.AA14,
-          AG14: dataConcepcion.AG14
-        };
+      // Mes completamente anterior a la fecha fin
+      if (
+        mes.anio < anioData ||
+        (mes.anio === anioData && mes.mesNumero < currentMonth)
+      ) {
+        h4 += mes.valor;
+        console.log(
+          `SUMA COMPLETA → ${mes.mesNumero}/${mes.anio}: ${mes.valor}`
+        );
       }
-      if ((dataEnd.getFullYear() - 1 === 2024) && mes.anio === 2024 && mes.mesNumero === currentMonth) {
-        // Si es el mes actual, solo hasta el día actual
-        let valorPorDia
-        valorPorDia = (mes.valor / 30) * currentDay;
-        h4 = h4 + valorPorDia;
-        dataConcepcion = {
-          AH14: h4,
-          AA14: dataConcepcion.AA14,
-          AG14: dataConcepcion.AG14
-        };
+
+      // Mes actual (mismo año y mes)
+      else if (
+        mes.anio === anioData &&
+        mes.mesNumero === currentMonth
+      ) {
+        const valorProporcional = (mes.valor / 30) * currentDay;
+        h4 += valorProporcional;
+        console.log(
+          `SUMA PROPORCIONAL → ${mes.mesNumero}/${mes.anio}: ${valorProporcional}`
+        );
       }
-      if ((dataEnd.getFullYear() - 1 === 2025) && mes.anio === 2025 && mes.mesNumero < currentMonth) {
-        let valorPorDia = mes.valor
-        h4 = h4 + valorPorDia
-        dataConcepcion = {
-          AH14: h4,
-          AA14: dataConcepcion.AA14,
-          AG14: dataConcepcion.AG14
-        };
-      }
-      if ((dataEnd.getFullYear() - 1 === 2025) && mes.anio === 2025 && mes.mesNumero === currentMonth) {
-        // Si es el mes actual, solo hasta el día actual
-        let valorPorDia = mes.valor
-        valorPorDia = valorPorDia + (mes.valor / 30) * currentDay;
-        h4 = h4 + valorPorDia;
-        dataConcepcion = {
-          AH14: h4,
-          AA14: dataConcepcion.AA14,
-          AG14: dataConcepcion.AG14
-        };
-      }
+
     });
+    dataConcepcion = {
+      AH14: h4,
+      AA14: dataConcepcion.AA14,
+      AG14: dataConcepcion.AG14
+    };
 
     // Bella Vista - Zafra 2024
     anhidroBellaVista.forEach((mes) => {
-      if ((dataEnd.getFullYear() - 1 === 2024) && mes.anio === 2024 && mes.mesNumero < currentMonth) {
-        let valorPorDia = mes.valor
-        h6 = h6 + valorPorDia
-        dataBellaVista = {
-          AH17: h6,
-          AA17: dataBellaVista.AA17,
-          AG17: dataBellaVista.AG17
-        };
+      // Mes completamente anterior a la fecha fin
+      if (
+        mes.anio < anioData ||
+        (mes.anio === anioData && mes.mesNumero < currentMonth)
+      ) {
+        h6 += mes.valor;
+        console.log(
+          `SUMA COMPLETA → ${mes.mesNumero}/${mes.anio}: ${mes.valor}`
+        );
       }
-      if ((dataEnd.getFullYear() - 1 === 2024) && mes.anio === 2024 && mes.mesNumero === currentMonth) {
-        // Si es el mes actual, solo hasta el día actual
-        let valorPorDia
-        valorPorDia = (mes.valor / 30) * currentDay;
-        h6 = h6 + valorPorDia;
-        dataBellaVista = {
-          AH17: h6,
-          AA17: dataBellaVista.AA17,
-          AG17: dataBellaVista.AG17
-        };
+
+      // Mes actual (mismo año y mes)
+      else if (
+        mes.anio === anioData &&
+        mes.mesNumero === currentMonth
+      ) {
+        const valorProporcional = (mes.valor / 30) * currentDay;
+        h6 += valorProporcional;
+        console.log(
+          `SUMA PROPORCIONAL → ${mes.mesNumero}/${mes.anio}: ${valorProporcional}`
+        );
       }
-      if ((dataEnd.getFullYear() - 1 === 2025) && mes.anio === 2025 && mes.mesNumero < currentMonth) {
-        let valorPorDia = mes.valor
-        h6 = h6 + valorPorDia
-        dataBellaVista = {
-          AH17: h6,
-          AA17: dataBellaVista.AA17,
-          AG17: dataBellaVista.AG17
-        };
-      }
-      if ((dataEnd.getFullYear() - 1 === 2025) && mes.anio === 2025 && mes.mesNumero === currentMonth) {
-        // Si es el mes actual, solo hasta el día actual
-        let valorPorDia = mes.valor
-        valorPorDia = valorPorDia + (mes.valor / 30) * currentDay;
-        h6 = h6 + valorPorDia;
-        dataBellaVista = {
-          AH17: h6,
-          AA17: dataBellaVista.AA17,
-          AG17: dataBellaVista.AG17
-        };
-      }
+
     });
+    dataBellaVista = {
+      AH17: h6,
+      AA17: dataBellaVista.AA17,
+      AG17: dataBellaVista.AG17
+    };
 
   }
+
   if (zafraParteDiario - 1 === 2023) {
     const currentDate = dataEnd !== null ? new Date(dataEnd) : new Date();
     const anioData = currentDate.getFullYear() - 1;
@@ -2650,7 +2611,7 @@ export const dataComparativaPorTipo = (
       newDate <= fechaParametroLaEsperanza &&
       newDate >= new Date(dataInicioIngeniosNorte.Cell44)
     ) {
-      
+
       a16 = a16 + data.moliendaCanaBruta || 0;
       b16 = b16 + data.moliendaCanaNeta || 0;
       c16 = c16 + Number(data.azucarEquivalente.replace(/\./g, '')) || 0;
