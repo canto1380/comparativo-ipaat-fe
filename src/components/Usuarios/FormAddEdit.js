@@ -21,7 +21,6 @@ const FormAddEditUsuarios = ({ tokenAuth, routerAPI, dataRegisterEdit }) => {
       }, 3000);
     }
   };
-  console.log(dataRegisterEdit[0])
   const updateUser = async (values) => {
     const res = await api(
       "PATCH",
@@ -46,7 +45,6 @@ const FormAddEditUsuarios = ({ tokenAuth, routerAPI, dataRegisterEdit }) => {
     }
   };
   const onFinishFailed = (errorInfo) => {
-    console.log("Failed:", errorInfo);
   };
   return (
     <div className="menuContainer">

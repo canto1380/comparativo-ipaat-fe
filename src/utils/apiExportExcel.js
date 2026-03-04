@@ -14,7 +14,6 @@ export const apiExportExcel = async (method, endpoint, data, token) => {
     });
     return res
   } catch (error) {
-    console.log(error)
     return error
   }
 };

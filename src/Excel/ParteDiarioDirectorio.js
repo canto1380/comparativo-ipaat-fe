@@ -4550,7 +4550,7 @@ page1.getCell("O61").value = {
       setDataImportDestileria(null);
       setDataImportDestileriaComparativa(null);
     } catch (error) {
-      console.log(error);
+      return error;
     }
   }
 };

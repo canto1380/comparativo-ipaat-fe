@@ -157,7 +157,7 @@ export const DatosHistoricosZafraExcel = async ({
       setLoadingDownload(false);
       setDataImport(null);
     } catch (error) {
-      console.log(error);
+      return error
     }
   }
 };

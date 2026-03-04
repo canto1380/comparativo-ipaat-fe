@@ -1564,9 +1564,7 @@ export const dataComparativaPorTipo = (
         (mes.anio === anioData && mes.mesNumero < currentMonth)
       ) {
         h11 += mes.valor;
-        console.log(
-          `SUMA COMPLETA → ${mes.mesNumero}/${mes.anio}: ${mes.valor}`
-        );
+
       }
 
       // Mes actual (mismo año y mes)
@@ -1576,9 +1574,7 @@ export const dataComparativaPorTipo = (
       ) {
         const valorProporcional = (mes.valor / 30) * currentDay;
         h11 += valorProporcional;
-        console.log(
-          `SUMA PROPORCIONAL → ${mes.mesNumero}/${mes.anio}: ${valorProporcional}`
-        );
+
       }
 
     });
@@ -1597,9 +1593,7 @@ export const dataComparativaPorTipo = (
         (mes.anio === anioData && mes.mesNumero < currentMonth)
       ) {
         h4 += mes.valor;
-        console.log(
-          `SUMA COMPLETA → ${mes.mesNumero}/${mes.anio}: ${mes.valor}`
-        );
+        
       }
 
       // Mes actual (mismo año y mes)
@@ -1609,9 +1603,7 @@ export const dataComparativaPorTipo = (
       ) {
         const valorProporcional = (mes.valor / 30) * currentDay;
         h4 += valorProporcional;
-        console.log(
-          `SUMA PROPORCIONAL → ${mes.mesNumero}/${mes.anio}: ${valorProporcional}`
-        );
+        
       }
 
     });
@@ -1629,9 +1621,7 @@ export const dataComparativaPorTipo = (
         (mes.anio === anioData && mes.mesNumero < currentMonth)
       ) {
         h6 += mes.valor;
-        console.log(
-          `SUMA COMPLETA → ${mes.mesNumero}/${mes.anio}: ${mes.valor}`
-        );
+        
       }
 
       // Mes actual (mismo año y mes)
@@ -1641,9 +1631,7 @@ export const dataComparativaPorTipo = (
       ) {
         const valorProporcional = (mes.valor / 30) * currentDay;
         h6 += valorProporcional;
-        console.log(
-          `SUMA PROPORCIONAL → ${mes.mesNumero}/${mes.anio}: ${valorProporcional}`
-        );
+        
       }
 
     });

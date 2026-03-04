@@ -116,7 +116,6 @@ const DDJJContainer = ({ tokenAuth, dataUserRegister }) => {
     if (!quincenaDesdeInformacion) {
       return quincenasOptions;
     }
-    // console.log(quincenaDesdeInformacion)
     const { month: desdeM, quincena: desdeQ, anio: desdeY } = quincenaDesdeInformacion
     const desdeDate = new Date(desdeY, desdeM - 1, desdeQ === 1 ? 1 : 16);
 
