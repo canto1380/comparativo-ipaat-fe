@@ -827,6 +827,7 @@ const ParteDiario = ({
     }
     setDataDiasAnhidroNorteComparativa(diasAnhidro)
   }
+  console.log('periodosss: ', periodosZafra)
   /*******************************************************************/
   /*** ESTIMACIONES ***/
   let estimacionEEAOC;
