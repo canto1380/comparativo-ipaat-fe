@@ -46,7 +46,6 @@ const FormPass = ({ tokenAuth, routerAPI, dataRegisterEdit }) => {
     }
   };
   const onFinishFailed = (errorInfo) => {
-    console.log("Failed:", errorInfo);
   };
   return (
     <div className="menuContainer">

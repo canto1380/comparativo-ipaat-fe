@@ -157,6 +157,12 @@
   height: auto;
   opacity: 0.8;
 }
+.ant-col {
+  padding-bottom: 0 !important;
+}
+.ant-form-item-label {
+  padding-bottom: 0 !important;
+}
 
 /* Ajustes responsivos */
 @media (max-width: 768px) {

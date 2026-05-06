@@ -6,13 +6,13 @@ export const COOKIES = {
 
 const login = async (userLogin) => {
   try {
-    console.log('userLogin: ', userLogin)
     const res = await api('POST', 'signin', userLogin)
 
     return res
 
   } catch (error) {
-    console.log('🚀 ~ file: login.js ~ line 15 ~ error', error)
+    console.error('🚀 ~ file: login.js ~ line 15 ~ error', error)
+    return error
   }
 }
 

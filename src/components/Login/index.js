@@ -1,15 +1,16 @@
 import React, { useState, useContext } from "react";
-import { Button, Form, Input, Card, Alert } from "antd";
+import { Button, Form, Input, Card } from "antd";
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
-import { validaEmail, validaClave } from "../../utils/validations/validation";
+import { validaClave } from "../../utils/validations/validation";
 import Cookies from "js-cookie";
 import "./Login.css";
 import { redirectBase } from "../../helpers/redirect";
 import loginAPI from "../../utils/authentication/login.js";
 import { User } from "../../context/UserProvider";
+import { toast } from "react-toastify";
 
 import IpaatLogo from '../../images/IPAAT-logos-horizontal.png';
-import MinEconProdLogo from '../../images/MinEconomia-color.png'
+import MinEconProdLogo from '../../images/MinEconomia-color.png';
 
 export const COOKIES = {
   authToken: "token-ipaat-v2",
@@ -18,66 +19,64 @@ export const COOKIES = {
 
 const Login = ({ banderaLogin, setBanderaLogin }) => {
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
   const { login: loginContext } = useContext(User);
 
-  const onFinish = async (values) => {
-    setLoading(true);
-    setError('');
+  const claveCookie =
+    process.env.REACT_APP_API || process.env.REACT_APP_PRODUCTION;
 
+  const onFinish = async (values) => {
+    if (loading) return;
+
+    setLoading(true);
+
+    if (!validaClave(values.clave)) {
+      toast.error("Ingrese un usuario y contraseña válidos.", {
+        autoClose: 3000,
+      });
+      setLoading(false);
+      return;
+    }
+
+    await login(values);
+  };
+
+  const login = async (values) => {
     try {
-      if (validaClave(values.clave)) {
-        login(values)
-      } else {
-        setError('Ingrese un email y clave válida.');
-        setLoading(false);
+      const res = await loginAPI(values);
+
+      if (res.status === 200) {
+        const { token, user } = res.data;
+        const { id } = user;
+        toast.success(`Bienvenido ${values.usuario}`);
+        // Cookies
+        Cookies.set(COOKIES.authToken, token, { expires: 1 });
+        Cookies.set(COOKIES.authId, id, { expires: 1 });
+
+        // Contexto
+        loginContext(token, user);
+        // Redirección
+        redirectBase("admin/parte-diario");
+        return;
       }
+      if(res.status !== 200) {
+        toast.error(`${res?.response?.data?.error || 'Error en los datos del usuario.' }`)
+      }
+
     } catch (error) {
-      setError('Error de conexión. Por favor, intente más tarde.');
+      const msg =
+        error?.response?.data?.error ||
+        "Error en el servidor. Intente nuevamente.";
+
+      toast.error(msg, {
+        autoClose: 3000,
+      });
     } finally {
       setLoading(false);
     }
   };
 
-  const claveCookie = process.env.REACT_APP_API ? process.env.REACT_APP_API : process.env.REACT_APP_PRODUCTION
-  const login = async (values) => {
-    try {
-      const res = await loginAPI(values);
-      if (res.status === 200) {
-        const { token, user } = res.data;
-        const { id } = user;
-        
-        // Guardar en cookies
-        Cookies.set(COOKIES.authToken, token, claveCookie, { expires: 1 });
-        Cookies.set(COOKIES.authId, id, claveCookie, { expires: 1 });
-        
-        // Actualizar el contexto con los datos del usuario
-        loginContext(token, user);
-
-        setLoading(true);
-        setTimeout(() => {
-          setLoading(false);
-          setBanderaLogin(!banderaLogin);
-        }, 3000);
-        redirectBase("admin/parte-diario");
-      }
-      if (res?.response?.status === 404) {
-        setError(true);
-        setTimeout(() => {
-          setError(false);
-        }, 3000);
-      }
-    } catch (error) {
-      setError('Error en el servidor. Por favor, intente más tarde.')
-    }
-    finally {
-      setLoading(false)
-    }
-  };
-
-
   const onFinishFailed = (errorInfo) => {
-    console.log("Failed:", errorInfo);
+    return errorInfo;
   };
 
   return (
@@ -92,6 +91,7 @@ const Login = ({ banderaLogin, setBanderaLogin }) => {
 
           <div className="login-form-wrapper">
             <h2 className="login-form-title">Bienvenido</h2>
+
             <Form
               name="login_form"
               onFinish={onFinish}
@@ -103,9 +103,9 @@ const Login = ({ banderaLogin, setBanderaLogin }) => {
               <Form.Item
                 name="usuario"
                 label="Usuario"
+                className=""
                 rules={[
-                  { required: true, message: 'Por favor ingrese su usuario' },
-                  { type: 'text', message: 'El usuario no es válido' }
+                  { required: true, message: 'Por favor ingrese su usuario' }
                 ]}
               >
                 <Input
@@ -128,17 +128,6 @@ const Login = ({ banderaLogin, setBanderaLogin }) => {
                 />
               </Form.Item>
 
-              {error && (
-                <Alert
-                  message={error}
-                  type="error"
-                  showIcon
-                  className="login-alert"
-                  closable
-                  onClose={() => setError('')}
-                />
-              )}
-
               <Form.Item className="login-button-wrapper">
                 <Button
                   type="primary"
@@ -146,6 +135,7 @@ const Login = ({ banderaLogin, setBanderaLogin }) => {
                   className="login-form-button"
                   block
                   loading={loading}
+                  disabled={loading}
                 >
                   {loading ? 'Ingresando...' : 'Ingresar'}
                 </Button>

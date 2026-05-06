@@ -194,7 +194,7 @@ const Filtros = ({
     optionsMeses.push(option);
   });
 
-  let optionsAnios = [zafraOpcionTodos === true ? { value: "", label: "Todos" } : []];
+  let optionsAnios = [zafraOpcionTodos === true ? { value: "", label: "Todos" } : {value: '', label: 'Seleccione'}];
   dataAnios?.forEach((d) => {
     const option = {
       value: d.anio_zafra,
