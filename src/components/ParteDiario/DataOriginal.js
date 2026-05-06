@@ -564,6 +564,7 @@ export const dataPorTipo = (
   let azucarPanelOtros = 0
   let alcoholPanel = 0;
   let alcoholAnhidroPanel
+  console.log('panel 1: ', cmbPanel)
   /****  FECHAS INICIO  ****/
   const aguil = dateInicioIngenios?.find(
     (d) => d.nombre_ingenio === "Aguilares"
@@ -2734,9 +2735,10 @@ export const dataPorTipo = (
     dataStaRosa.E25 +
     dataSanJuan.E26
 
-    
-    
-    azucarPanelEquivalente =
+    console.log('panel 2: ', cmbPanel)
+
+
+  azucarPanelEquivalente =
     dataAguilares.G10 +
     dataCruzAlta.G11 +
     dataLaFlorida.G12 +
@@ -2753,7 +2755,7 @@ export const dataPorTipo = (
     dataStaRosa.G25 +
     dataSanJuan.G26
 
-    azucarPanelCrudo =
+  azucarPanelCrudo =
     dataAguilares.L44 +
     dataCruzAlta.L47 +
     dataLaFlorida.L50 +
@@ -2770,7 +2772,7 @@ export const dataPorTipo = (
     dataStaRosa.L57 +
     dataSanJuan.L58
 
-    azucarPanelBlancoA =
+  azucarPanelBlancoA =
     dataAguilares.C43 +
     dataCruzAlta.C47 +
     dataLaFlorida.C50 +
@@ -2787,7 +2789,7 @@ export const dataPorTipo = (
     dataStaRosa.C57 +
     dataSanJuan.C58
 
-    azucarPanelRefinado =
+  azucarPanelRefinado =
     dataAguilares.D43 +
     dataCruzAlta.D47 +
     dataLaFlorida.D50 +
@@ -2804,7 +2806,7 @@ export const dataPorTipo = (
     dataStaRosa.D57 +
     dataSanJuan.D58
 
-    azucarPanelOtros =
+  azucarPanelOtros =
     dataAguilares.G43 +
     dataCruzAlta.G47 +
     dataLaFlorida.G50 +
@@ -2822,7 +2824,7 @@ export const dataPorTipo = (
     dataSanJuan.G58
 
 
-    azucarPanelOrganico =
+  azucarPanelOrganico =
     dataAguilares.F43 +
     dataCruzAlta.F47 +
     dataLaFlorida.F50 +
@@ -2839,7 +2841,7 @@ export const dataPorTipo = (
     dataStaRosa.F57 +
     dataSanJuan.F58
 
-    azucarPanel = azucarPanelCrudo + azucarPanelBlancoA + azucarPanelRefinado + azucarPanelOrganico + azucarPanelOtros
+  azucarPanel = azucarPanelCrudo + azucarPanelBlancoA + azucarPanelRefinado + azucarPanelOrganico + azucarPanelOtros
   /** NORTE **/
 
   dataImportNorte?.forEach((data) => {
