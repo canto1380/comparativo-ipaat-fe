@@ -25,6 +25,7 @@ const PeriodoZafraContainer = ({ tokenAuth, routeAPI }) => {
   const [periodosZafra, setPeriodosZafra] = useState(null);
   const [yearZafra, setYearZafra] = useState(null);
   const [search, setSearch] = useState(null);
+  const [region, setRegion] = useState(null)
   const [loading, setLoading] = useState(false);
   const [band, setBand] = useState(false);
   const [modalUnauthorized, setModalUnauthorized] = useState(false);
@@ -50,10 +51,10 @@ const PeriodoZafraContainer = ({ tokenAuth, routeAPI }) => {
   useEffect(() => {
     dataPeriodosZafra();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [search, yearZafra, band]);
+  }, [search, yearZafra, region, band]);
 
   const dataPeriodosZafra = async () => {
-    const params = { search, anio: yearZafra };
+    const params = { search, anio: yearZafra, region };
     const data = await getPeriodoZafra(params);
     setPeriodosZafra(data);
   };
@@ -121,14 +122,14 @@ const PeriodoZafraContainer = ({ tokenAuth, routeAPI }) => {
     },
     {
       key: "fin_zafra",
-      title: "Final",
+      title: "Final fábrica",
       dataIndex: "fin_zafra",
       sorter: (a, b) => new Date(a.fin_zafra) - new Date(b.fin_zafra),
       render: (date) => (date ? moment(date).format("DD-MM-YYYY") : null),
     },
     {
       key: "fin_datos_zafra",
-      title: "Fin de datos",
+      title: "Última tara CMB",
       dataIndex: "fin_datos_zafra",
       sorter: (a, b) => new Date(a.fin_datos_zafra) - new Date(b.fin_datos_zafra),
       render: (date) => (date ? moment(date).format("DD-MM-YYYY") : null),
@@ -251,8 +252,10 @@ const PeriodoZafraContainer = ({ tokenAuth, routeAPI }) => {
             bandTitlePrincipal={true} // HABILITA TITULO PRINCIPAL
             setSearch={setSearch}
             setDataZafra={setYearZafra}
+            setRegion={setRegion}
             bandFilterZafraAnio={true}
             bandFilterSearch={true}
+            bandFilterRegion={true}
             placeHolderSearch="Valor"
             zafraOpcionTodos={true}
           />

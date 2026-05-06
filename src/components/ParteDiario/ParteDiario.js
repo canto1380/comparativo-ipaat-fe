@@ -17,6 +17,7 @@ import { getDiasParadas } from "../../utils/queryAPI/diaParadas";
 import TextArea from "antd/es/input/TextArea";
 import { toast } from "react-toastify";
 import '../Botones/botones.css'
+import { getPeriodoZafra } from "../../utils/queryAPI/periodosZafra";
 
 const ParteDiario = ({
   dataEnd,
@@ -145,27 +146,9 @@ const ParteDiario = ({
   const [finAnhidroNorteComparativa, setFinAnhidroNorteComparativa] = useState("");
 
   /** FECHAS DE TODOS LOS INGENIOS DE INICIO Y FIN TUCUMAN **/
-  const [fechasInicioIngenios, setFechasInicioIngenios] = useState(null);
-  const [fechasInicioDestileriaIngenios, setFechasInicioDestileriaIngenios] =
-    useState(null);
-  const [fechasInicioAnhidroIngenios, setFechasInicioAnhidroIngenios] = useState(null)
-
-  const [fechasInicioIngeniosComparativa, setFechasInicioIngeniosComparativa] =
-    useState(null);
-  const [
-    fechasInicioDestileriaIngeniosComparativa,
-    setFechasInicioDestileriaIngeniosComparativa,
-  ] = useState(null);
-  const [
-    fechasInicioAnhidroIngeniosComparativa,
-    setFechasInicioAnhidroIngeniosComparativa,
-  ] = useState(null);
-
-
 
   /** FECHAS DE TODOS LOS INGENIOS DE INICIO Y FIN NORTE **/
-  const [fechasInicioIngeniosNorte, setFechasInicioIngeniosNorte] =
-    useState(null);
+
   const [
     fechasInicioDestileriaIngeniosNorte,
     setFechasInicioDestileriaIngeniosNorte,
@@ -222,7 +205,27 @@ const ParteDiario = ({
   const [loadingDownload, setLoadingDownload] = useState(false);
   const [dataComparativa, setDataComparativa] = useState(undefined);
   const [dataUserRegister, setDataUserRegister] = useState(undefined);
+
+  const [periodosZafra, setPeriodosZafra] = useState(null);
+  const [periodosZafraComparativa, setPeriodosZafraComparativa] = useState(null)
+
   const { dataUser } = useContext(User);
+
+  /** PERIODOS ZAFRA - TABLA DB **/
+  useEffect(() => {
+    dataPeriodosZafra();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [zafraParteDiario]);
+
+  const dataPeriodosZafra = async () => {
+    const params = { anio: zafraParteDiario }
+    const paramsComparativa = { anio: zafraParteDiario - 1 }
+
+    const data = await getPeriodoZafra(params)
+    setPeriodosZafra(data)
+    const dataComparativa = await getPeriodoZafra(paramsComparativa)
+    setPeriodosZafraComparativa(dataComparativa)
+  }
 
   useEffect(() => {
     dataComparativaGet();
@@ -273,10 +276,6 @@ const ParteDiario = ({
       setN3,
       setN4,
       setN5,
-      setFechasInicioIngenios,
-      setFechasInicioDestileriaIngenios,
-      setFechasInicioAnhidroIngenios,
-      setFechasInicioIngeniosNorte,
       setFechasInicioDestileriaIngeniosNorte,
       setFechasInicioAnhidroIngeniosNorte,
       setPanelCMB,
@@ -321,18 +320,10 @@ const ParteDiario = ({
       setNc3,
       setNc4,
       setNc5,
-      setFechasInicioIngeniosComparativa,
-      setFechasInicioDestileriaIngeniosComparativa,
-      setFechasInicioAnhidroIngeniosComparativa,
       setFechasInicioIngeniosNorteComparativa,
       setFechasInicioDestileriaIngeniosNorteComparativa,
       setFechasInicioAnhidroIngeniosNorteComparativa
     );
-    // dataFinZafra();
-    // dataFinZafraComparativa();
-    // dataFinZafraNorte();
-    // dataFinZafraComparativaNorte();
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     dataImport,
@@ -358,7 +349,7 @@ const ParteDiario = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dataAnio, dataEnd]);
   const dataDiasParadaExport = async () => {
-    const params = { anio: dataAnio, anioZafra: zafraParteDiario };
+    const params = { anio: zafraParteDiario };
     const data = await getDiasParadas(params);
     setDiasParadaExport(data);
   };
@@ -374,8 +365,8 @@ const ParteDiario = ({
     const fechaInicioZafra = periodosTucumanActual.inicio_zafra && periodosTucumanActual.inicio_zafra !== null
       ? new Date(periodosTucumanActual.inicio_zafra)
       : null
-    const fechaFinZafra = periodosTucumanActual.fin_zafra && periodosTucumanActual.fin_zafra !== null
-      ? new Date(periodosTucumanActual.fin_zafra)
+    const fechaFinZafra = periodosTucumanActual.fin_datos_zafra && periodosTucumanActual.fin_datos_zafra !== null
+      ? new Date(periodosTucumanActual.fin_datos_zafra)
       : null
 
     const fechaInicioDestileria = periodosTucumanActual.inicio_destileria && periodosTucumanActual.inicio_destileria !== null
@@ -403,8 +394,8 @@ const ParteDiario = ({
     const fechaInicioZafraComparativo = periodosTucumanComparativo.inicio_zafra && periodosTucumanComparativo.inicio_zafra !== null
       ? new Date(periodosTucumanComparativo.inicio_zafra)
       : null
-    const fechaFinZafraComparativo = periodosTucumanComparativo.fin_zafra && periodosTucumanComparativo.fin_zafra !== null
-      ? new Date(periodosTucumanComparativo.fin_zafra)
+    const fechaFinZafraComparativo = periodosTucumanComparativo.fin_datos_zafra && periodosTucumanComparativo.fin_datos_zafra !== null
+      ? new Date(periodosTucumanComparativo.fin_datos_zafra)
       : null
 
     const fechaInicioDestileriaComparativo = periodosTucumanComparativo.inicio_destileria && periodosTucumanComparativo.inicio_destileria !== null
@@ -430,7 +421,6 @@ const ParteDiario = ({
 
   }
   /***************************************************************************************/
-
   /************* CALCULO PARA OBTENER FECHA DE INICIO Y FIN DE ZAFRAS NORTE *************/
   useEffect(() => {
     if (periodosNorteActual && periodosNorteComparativo) {
@@ -442,8 +432,8 @@ const ParteDiario = ({
     const fechaInicioZafra = periodosNorteActual.inicio_zafra && periodosNorteActual.inicio_zafra !== null
       ? new Date(periodosNorteActual.inicio_zafra)
       : null
-    const fechaFinZafra = periodosNorteActual.fin_zafra && periodosNorteActual.fin_zafra !== null
-      ? new Date(periodosNorteActual.fin_zafra)
+    const fechaFinZafra = periodosNorteActual.fin_datos_zafra && periodosNorteActual.fin_datos_zafra !== null
+      ? new Date(periodosNorteActual.fin_datos_zafra)
       : null
 
     const fechaInicioDestileria = periodosNorteActual.inicio_destileria && periodosNorteActual.inicio_destileria !== null
@@ -471,8 +461,8 @@ const ParteDiario = ({
     const fechaInicioZafraComparativo = periodosNorteComparativo.inicio_zafra && periodosNorteComparativo.inicio_zafra !== null
       ? new Date(periodosNorteComparativo.inicio_zafra)
       : null
-    const fechaFinZafraComparativo = periodosNorteComparativo.fin_zafra && periodosNorteComparativo.fin_zafra !== null
-      ? new Date(periodosNorteComparativo.fin_zafra)
+    const fechaFinZafraComparativo = periodosNorteComparativo.fin_datos_zafra && periodosNorteComparativo.fin_datos_zafra !== null
+      ? new Date(periodosNorteComparativo.fin_datos_zafra)
       : null
 
     const fechaInicioDestileriaComparativo = periodosNorteComparativo.inicio_destileria && periodosNorteComparativo.inicio_destileria !== null
@@ -837,9 +827,8 @@ const ParteDiario = ({
     }
     setDataDiasAnhidroNorteComparativa(diasAnhidro)
   }
-
+  console.log('periodosss: ', periodosZafra)
   /*******************************************************************/
-
   /*** ESTIMACIONES ***/
   let estimacionEEAOC;
   dataComparativa?.forEach((d) => {
@@ -918,10 +907,7 @@ const ParteDiario = ({
           finZafraComparativa,   //  fin zafra comparativa
           dataDiasZafra,   // dias de zafra actual
           dataDiasZafraComparativa,   // Dias de zafra comparativa
-          
-          fechasInicioIngenios,   // Fechas de incios y fin de ingenios (Forma antigua) USADAS PARA COLUMNA C D Y AZ
-          fechasInicioIngeniosComparativa,   // Fechas de incios y fin de ingenios de zafra comparativa (Forma antigua)
-          
+
           /* destileria */
           inicioDestileria,
           inicioDestileriaComparativa,
@@ -930,8 +916,6 @@ const ParteDiario = ({
           dataDiasDestileria,
           dataDiasDestileriaComparativa,
 
-          fechasInicioDestileriaIngenios,   // Fechas de inciio y fin de destilerias 
-          fechasInicioDestileriaIngeniosComparativa,   // Fecha de inicio y fin destilerias comparativa
           /*anhidro*/
           inicioAnhidro,
           inicioAnhidroComparativa,
@@ -940,9 +924,6 @@ const ParteDiario = ({
           dataDiasAnhidro,
           dataDiasAnhidroComparativa,
 
-          fechasInicioAnhidroIngenios,
-          fechasInicioAnhidroIngeniosComparativa,
-          
           /** FECHAS NORTE **/
           /*zafra*/
           inicioZafraNorte,   //  Inicio zafra actual del norte
@@ -952,7 +933,6 @@ const ParteDiario = ({
           dataDiasZafraNorte,   // dias de zafra actual del norte
           dataDiasZafraNorteComparativa,   // dias de zafra comparativa dle norte
 
-          fechasInicioIngeniosNorte,   //  fechas incio, fin y fin_datos zafra actual del norte
           fechasInicioIngeniosNorteComparativa,   // fechas incio, fin y fin_datos zafra comparativa del norte
           /*destileria*/
           inicioDestileriaNorte,
@@ -961,9 +941,7 @@ const ParteDiario = ({
           finDestileriaNorteComparativa,
           dataDiasDestileriaNorte,
           dataDiasDestileriaNorteComparativa,
-
-          fechasInicioDestileriaIngeniosNorte,   // fechas inicio y fin destileria actual del norte
-          fechasInicioDestileriaIngeniosNorteComparativa,   // fechas inicio y fin destileria comparativa del norte
+          // fechas inicio y fin destileria comparativa del norte
           /*anhidro*/
           inicioAnhidroNorte,
           inicioAnhidroNorteComparativa,
@@ -977,7 +955,7 @@ const ParteDiario = ({
 
           /** REPORTE DIAS PARADAS **/
           diasParadaExport,   // Registros de dias de parada
-          
+
           /** DATOS GENERALES TUCUMAN Y NORTE ***/
           dataImport,   // Datos de tucuman - Usado para verificar si hay datos desde el backend
           dataImportComparativa,   // Datos comparativas de tucuman
@@ -988,6 +966,8 @@ const ParteDiario = ({
 
           /** ESTIMACIONES EEAOC Y CAA **/
           dataComparativa,   // Datos de estimaciones de EEAOC
+          periodosZafra, // Periodos de los ingenios de la zafra elegida
+          periodosZafraComparativa, // Periodos de los ingenios de la zafra comparativa
         },
       ];
 
@@ -1185,9 +1165,7 @@ const ParteDiario = ({
               setBanderaDataNull,
               inicioZafra,
               inicioZafraComparativa,
-              fechasInicioIngenios,
               dataDiasZafra,
-              fechasInicioIngeniosComparativa,
               dataDiasZafraComparativa,
               setDataImport,
               setDataImportComparativa,
@@ -1198,17 +1176,14 @@ const ParteDiario = ({
               finZafraComparativa,
               dataComparativa,
               zafraParteDiario,
-              fechasInicioDestileriaIngenios,
-              fechasInicioDestileriaIngeniosComparativa,
+
               /**NORTE **/
               inicioZafraNorte,
               inicioZafraNorteComparativa,
               finZafraNorte,
               finZafraNorteComparativa,
-              fechasInicioIngeniosNorte,
               fechasInicioIngeniosNorteComparativa,
-              fechasInicioDestileriaIngeniosNorte,
-              fechasInicioDestileriaIngeniosNorteComparativa,
+
               dataDiasZafraNorte,
               dataDiasZafraNorteComparativa,
               aguilDiasParada,
@@ -1382,9 +1357,7 @@ const ParteDiario = ({
               className={`btn-descargar ${(dataEnd === null ||
                 dataImport === null ||
                 dataImportComparativa === null ||
-                fechasInicioIngenios === null ||
-                loadingDownload === true ||
-                fechasInicioIngeniosComparativa === null) &&
+                loadingDownload === true) &&
                 "disabled"
                 }`}
             >

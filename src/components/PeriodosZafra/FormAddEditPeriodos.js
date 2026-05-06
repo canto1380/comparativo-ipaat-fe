@@ -112,13 +112,13 @@ const FormAddEditPeriodos = ({ dataRegisterEdit, aniosData, ingeniosData }) => {
   };
 
   const updatePeriodo = async (values) => {
-    values.inicio_zafra = inicioZafra === null ? inicioZafra : moment(inicioZafra).format("YYYY-MM-DD");
-    values.fin_zafra = finZafra === null ? finZafra : moment(finZafra).format("YYYY-MM-DD");
-    values.fin_datos_zafra = finalDatos === null ? finalDatos : moment(finalDatos).format("YYYY-MM-DD")
-    values.inicio_destileria = inicioDestileria === null ? inicioDestileria : moment(inicioDestileria).format("YYYY-MM-DD");
-    values.fin_destileria = finDestileria === null ? finDestileria : moment(finDestileria).format("YYYY-MM-DD");
-    values.inicio_anhidro = inicioAnhidro === null ? inicioAnhidro : moment(inicioAnhidro).format("YYYY-MM-DD");
-    values.fin_anhidro = finAnhidro === null ? finAnhidro : moment(finAnhidro).format("YYYY-MM-DD");
+    values.inicio_zafra = inicioZafra ?  moment(inicioZafra).format("YYYY-MM-DD") : null;
+    values.fin_zafra = finZafra ?  moment(finZafra).format("YYYY-MM-DD") : null;
+    values.fin_datos_zafra = finalDatos ? moment(finalDatos).format("YYYY-MM-DD") : null;
+    values.inicio_destileria = inicioDestileria ?  moment(inicioDestileria).format("YYYY-MM-DD") : null;
+    values.fin_destileria = finDestileria ?  moment(finDestileria).format("YYYY-MM-DD") : null;
+    values.inicio_anhidro = inicioAnhidro ?  moment(inicioAnhidro).format("YYYY-MM-DD") : null;
+    values.fin_anhidro = finAnhidro ? moment(finAnhidro).format("YYYY-MM-DD") : null;
     try {
       const res = await api(
         "PATCH",

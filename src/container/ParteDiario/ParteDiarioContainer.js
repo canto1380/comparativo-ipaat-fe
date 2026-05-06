@@ -3,7 +3,6 @@ import { Container } from "react-bootstrap";
 import TitlePage from "../../components/TitlePages";
 import ParteDiario from "../../components/ParteDiario/ParteDiario";
 import Filtros from "../../components/Filtros";
-import { getDataPartesDiariosBE } from "../../utils/queryAPI/partesDiariosQuery";
 import Spinn from "../../components/Spinner";
 import MsgError from "../../components/Messages/MsgError";
 import { getPeriodoZafra } from "../../utils/queryAPI/periodosZafra";

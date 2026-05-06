@@ -24,6 +24,7 @@ const DiasParadaContainer = ({ tokenAuth, routeAPI }) => {
   const [anioZafra, setAnioZafra] = useState(null);
   const [ingenio, setIngenio] = useState(null);
   const [search, setSearch] = useState(null);
+  const [region, setRegion] = useState(null)
   const [loading, setLoading] = useState(true);
   const [modalUnauthorized, setModalUnauthorized] = useState(false);
   const [loadingDownloadReport, setLoadingDownloadReport] = useState(false);
@@ -52,7 +53,7 @@ const DiasParadaContainer = ({ tokenAuth, routeAPI }) => {
   useEffect(() => {
     dataDiasParadas();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [search, anioZafra, ingenio, dataMes, dataQuincena]);
+  }, [search, anioZafra, ingenio, dataMes, dataQuincena, region]);
 
   const dataDiasParadas = async () => {
     try {
@@ -62,6 +63,7 @@ const DiasParadaContainer = ({ tokenAuth, routeAPI }) => {
         ingenio,
         dataMes,
         dataQuincena,
+        region
       };
       const Data = await getDiasParadas(params);
       setDiasParadas(Data);
@@ -75,10 +77,11 @@ const DiasParadaContainer = ({ tokenAuth, routeAPI }) => {
   useEffect(() => {
     getIngeniosData();
   }, []);
+  
   const getIngeniosData = async () => {
-    const params = { region: 1 };
+    const params = { region };
     const data = await getIngenios(params);
-    const res = data.filter((d) => d.nombre_ingenio !== "San Juan" && d.nombre_ingenio != 'Destilería Bella Vista');
+    const res = data.filter((d) => d.nombre_ingenio !== "San Juan" && d.nombre_ingenio !== 'Destilería Bella Vista');
     setIngeniosData(res);
   };
 
@@ -94,7 +97,6 @@ const DiasParadaContainer = ({ tokenAuth, routeAPI }) => {
       limit: 10000000,
       anio: anioZafra,
       deleted: 0,
-      region: 1,
     };
     const data = await getPeriodoZafra(params);
     const res = data.filter((d) => d.nombre_ingenio !== "San Juan");
@@ -200,6 +202,9 @@ const DiasParadaContainer = ({ tokenAuth, routeAPI }) => {
           fechaInicioFin: fechaInicioIngenios,
           anioZafra: anioZafra,
           ingenio: dataIngenios,
+          region,
+          dataMes,
+          dataQuincena
         },
       ];
       const res = await apiExportExcel("POST", "diaParada/descargar", dataSend);
@@ -242,12 +247,14 @@ const DiasParadaContainer = ({ tokenAuth, routeAPI }) => {
             setSearch={setSearch}
             dataZafra={anioZafra}
             setDataZafra={setAnioZafra}
+            setRegion={setRegion}
             setIngenio={setIngenio}
             setDataMes={setDataMes}
             setDataQuincena={setDataQuincena}
             bandFilterZafraAnio={true}
             bandFilterSearch={true}
             bandFilterIngenio={true}
+            bandFilterRegion={true}
             bandFilterMes={true}
             bandFilterQuincena={true}
             placeHolderSearch="Valor"
