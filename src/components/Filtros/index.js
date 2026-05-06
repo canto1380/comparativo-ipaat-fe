@@ -220,7 +220,7 @@ const Filtros = ({
     optionsIngenios.push(option);
   });
 
-  let optionsRegiones = [{ value: 'Todos', label: 'Todos' }]
+  let optionsRegiones = [{ value: "", label: 'Todos' }]
   dataRegiones?.forEach((d) => {
     const option = {
       value: d.id,

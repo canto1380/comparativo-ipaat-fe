@@ -541,10 +541,6 @@ export const dataPorTipo = (
   setN3,
   setN4,
   setN5,
-  setFechasInicioIngenios,
-  setFechasInicioDestileriaIngenios,
-  setFechasInicioAnhidroIngenios,
-  setFechasInicioIngeniosNorte,
   setFechasInicioDestileriaIngeniosNorte,
   setFechasInicioAnhidroIngeniosNorte,
   setPanelCMB,
@@ -812,11 +808,7 @@ export const dataPorTipo = (
     sanisidroFinAnhidro: sanisidro?.fin_anhidro,
   };
 
-  setFechasInicioIngenios(dataInicioIngenios);
-  setFechasInicioDestileriaIngenios(dataInicioDestileriaIngenios);
-  setFechasInicioIngeniosNorte(dataInicioIngeniosNorte);
   setFechasInicioDestileriaIngeniosNorte(dataInicioDestileriaIngeniosNorte);
-  setFechasInicioAnhidroIngenios(dataInicioAnhidroIngenios)
   setFechasInicioAnhidroIngeniosNorte(dataInicioAnhidroIngeniosNorte)
   /************/
 

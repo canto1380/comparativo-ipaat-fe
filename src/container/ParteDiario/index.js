@@ -49,7 +49,6 @@ const ContainerIndexParteDiario = () => {
     inactivityTime(setModalUnauthorized)
   }, []);
 
-
   return (
     <div>
       {loading ? (

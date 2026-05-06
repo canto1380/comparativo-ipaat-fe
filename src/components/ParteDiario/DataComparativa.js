@@ -528,9 +528,6 @@ export const dataComparativaPorTipo = (
   setNc3,
   setNc4,
   setNc5,
-  setFechasInicioIngeniosComparativa,
-  setFechasInicioDestileriaIngeniosComparativa,
-  setFechasInicioAnhidroIngeniosComparativa,
   setFechasInicioIngeniosNorteComparativa,
   setFechasInicioDestileriaIngeniosNorteComparativa,
   setFechasInicioAnhidroIngeniosNorteComparativa
@@ -760,9 +757,6 @@ export const dataComparativaPorTipo = (
     sanisidroFinAnhidro: sanisidro?.fin_anhidro,
   };
 
-  setFechasInicioIngeniosComparativa(dataInicioIngenios);
-  setFechasInicioDestileriaIngeniosComparativa(dataInicioDestileriaIngenios);
-  setFechasInicioAnhidroIngeniosComparativa(dataInicioAnhidroIngenios);
   setFechasInicioIngeniosNorteComparativa(dataInicioIngeniosNorte);
   setFechasInicioDestileriaIngeniosNorteComparativa(
     dataInicioDestileriaIngeniosNorte
