@@ -564,6 +564,7 @@ export const dataPorTipo = (
   let azucarPanelOtros = 0
   let alcoholPanel = 0;
   let alcoholAnhidroPanel
+  console.log('panel 1: ', cmbPanel)
   /****  FECHAS INICIO  ****/
   const aguil = dateInicioIngenios?.find(
     (d) => d.nombre_ingenio === "Aguilares"
