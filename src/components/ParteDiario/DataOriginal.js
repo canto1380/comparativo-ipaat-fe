@@ -2735,9 +2735,6 @@ export const dataPorTipo = (
     dataStaRosa.E25 +
     dataSanJuan.E26
 
-    console.log('panel 2: ', cmbPanel)
-
-
   azucarPanelEquivalente =
     dataAguilares.G10 +
     dataCruzAlta.G11 +

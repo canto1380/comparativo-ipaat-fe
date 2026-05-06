@@ -340,7 +340,6 @@ const ParteDiario = ({
     dataImportAnhidroComparativaNorte,
     zafraParteDiario,
   ]);
-  console.log('panel 3: ', panelCMB)
   /*** DATOS DIAS PARADAS ***/
   useEffect(() => {
     if (dataAnio !== null && dataEnd !== null) {
@@ -827,8 +826,7 @@ const ParteDiario = ({
     }
     setDataDiasAnhidroNorteComparativa(diasAnhidro)
   }
-  console.log('periodosss: ', periodosZafra)
-  /*******************************************************************/
+  
   /*** ESTIMACIONES ***/
   let estimacionEEAOC;
   dataComparativa?.forEach((d) => {
