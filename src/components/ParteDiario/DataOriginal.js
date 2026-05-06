@@ -564,7 +564,6 @@ export const dataPorTipo = (
   let azucarPanelOtros = 0
   let alcoholPanel = 0;
   let alcoholAnhidroPanel
-  console.log('panel 1: ', cmbPanel)
   /****  FECHAS INICIO  ****/
   const aguil = dateInicioIngenios?.find(
     (d) => d.nombre_ingenio === "Aguilares"
@@ -2734,9 +2733,6 @@ export const dataPorTipo = (
     dataStaBarbara.E24 +
     dataStaRosa.E25 +
     dataSanJuan.E26
-
-    console.log('panel 2: ', cmbPanel)
-
 
   azucarPanelEquivalente =
     dataAguilares.G10 +
