@@ -63,7 +63,6 @@ const ParteDiarioContainer = () => {
   const [periodosTucumanComparativo, setPeriodosTucumanComparativo] = useState(null)
   const [periodosNorteActual, setPeriodosNorteActual] = useState(null)
   const [periodosNorteComparativo, setPeriodosNorteComparativo] = useState(null)
-console.log(zafraParteDiario)
   useEffect(() => {
     if (dataZafra !== null && dateInicioIngeniosItemCollapse !== null) {
       getDataTucuman();

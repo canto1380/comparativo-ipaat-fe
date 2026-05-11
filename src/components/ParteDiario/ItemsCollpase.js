@@ -93,9 +93,8 @@ const eliminarDuplicadosPorFechaIngenio = (arr = []) => {
 
 // Devuelve último día del mes (para el uso original)
 const getLastDayOfMonth = (month /* 1..12 */) => {
-  // month argument in original code seemed to be dataMes (1..12)
-  // We want last day of that month in any year (use 2020 as leap-year safe)
-  const d = new Date(2020, month, 0); // passing month gives last day of previous month if month is 1..12 -> works
+
+  const d = new Date(2020, month, 0);
   return d.getDate();
 };
 
@@ -116,23 +115,74 @@ const flattenParts = (maybeGrouped = []) => {
     }).filter(Boolean);
   }
 
-  // grouped: transformar en lista plana tomando zafra + destileria + anhidro
+  // grouped (Tucumán): combinar por fechaParte para evitar "mezclar" alcohol de otra declaración.
+  // Regla clave:
+  // - Los campos de alcohol (alcoholProducido / alcoholAnhidro) SOLO se toman de destileria/anhidro.
+  // - Si para una fecha no hay destileria/anhidro, esos campos deben quedar en 0 aunque vengan cargados en zafra.
+  const safeAssignNonNull = (target, source) => {
+    if (!source) return target;
+    Object.keys(source).forEach((k) => {
+      const v = source[k];
+      if (v !== undefined && v !== null) target[k] = v;
+    });
+    return target;
+  };
+
+  const pick = (obj, keys) => {
+    const out = {};
+    keys.forEach((k) => {
+      if (obj && Object.prototype.hasOwnProperty.call(obj, k)) out[k] = obj[k];
+    });
+    return out;
+  };
+  const mergeByFecha = (grp) => {
+    const ingenioNombre = grp.ingenio || grp.ingenioNombre;
+    const byFecha = new Map();
+    const upsert = (row, kind) => {
+      if (!row || !row.fechaParte) return;
+      const key = row.fechaParte;
+      const current = byFecha.get(key) || { fechaParte: row.fechaParte, ingenioNombre };
+      if (kind === "zafra") {
+        // Partimos de zafra para los campos de molienda/azúcares/melaza, pero forzamos alcohol en 0.
+        const base = { ...row, ingenioNombre, alcoholProducido: 0, alcoholAnhidro: 0 };
+        byFecha.set(key, safeAssignNonNull(current, base));
+        return;
+      }
+      if (kind === "destileria") {
+        // Destilería "habilita" alcohol hidratado (alcoholProducido) para esa fecha
+        // IMPORTANTE: en muchos registros el backend manda en la misma fila datos de zafra + alcohol
+        // (por solape de campañas). Para evitar “contaminar” zafra de otra campaña, acá solo tomamos
+        // los campos de alcohol (y metadatos mínimos).
+        const patch = {
+          ...pick(row, ["id", "fechaParte", "ingenioCodigo", "ingenioNombre", "observacion", "identificadorDeclaracion"]),
+          ingenioNombre,
+          alcoholProducido: row.alcoholProducido,
+        };
+        if (patch.alcoholProducido === undefined || patch.alcoholProducido === null) patch.alcoholProducido = 0;
+        byFecha.set(key, safeAssignNonNull(current, patch));
+        return;
+      }
+      if (kind === "anhidro") {
+        // Anhidro "habilita" alcohol anhidro para esa fecha
+        const patch = {
+          ...pick(row, ["id", "fechaParte", "ingenioCodigo", "ingenioNombre", "observacion", "identificadorDeclaracion"]),
+          ingenioNombre,
+          alcoholAnhidro: row.alcoholAnhidro,
+        };
+        if (patch.alcoholAnhidro === undefined || patch.alcoholAnhidro === null) patch.alcoholAnhidro = 0;
+        byFecha.set(key, safeAssignNonNull(current, patch));
+        return;
+      }
+    };
+
+    (grp.zafra || []).forEach((r) => upsert(r, "zafra"));
+    (grp.destileria || []).forEach((r) => upsert(r, "destileria"));
+    (grp.anhidro || []).forEach((r) => upsert(r, "anhidro"));
+    return Array.from(byFecha.values());
+  };
   const flat = [];
   maybeGrouped.forEach((grp) => {
-    const ingenioNombre = grp.ingenio || grp.ingenioNombre;
-    const pushRows = (arr) => {
-      if (!Array.isArray(arr)) return;
-      arr.forEach((r) => {
-        if (!r) return;
-        flat.push({
-          ...r,
-          ingenioNombre,
-        });
-      });
-    };
-    pushRows(grp.zafra);
-    pushRows(grp.destileria);
-    pushRows(grp.anhidro);
+    mergeByFecha(grp).forEach((r) => flat.push(r));
   });
   return flat;
 };
@@ -233,7 +283,6 @@ const ItemsCollapse = ({
     const b = flattenParts(dataParteDiariosHistoricosNorte || []);
     return [...a, ...b];
   }, [dataParteDiariosHistoricos, dataParteDiariosHistoricosNorte]);
-
   // Agrupar por ingenio y aplicar filtros (quincena / mes / zafra)
   const ingeniosProcesados = useMemo(() => {
     // Agrupar partes por ingenioNombre
