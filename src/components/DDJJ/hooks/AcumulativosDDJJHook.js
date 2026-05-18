@@ -10,7 +10,8 @@ const items = [
   "azEquivalente",
   "rtoAzEquivalente",
   "alcoholElaborado",
-  "melaza"
+  "melaza",
+  "alcoholEtilicoAnhidroBiocombustible"
 ]
 
 export const datosAcumuladosDDJJHook = (
@@ -26,7 +27,8 @@ export const datosAcumuladosDDJJHook = (
     azFisico: "azucarFisicoTotal",
     azEquivalente: "azucarEquivalenteDj",
     alcoholElaborado: "alcoholTotalProducido",
-    melaza: "melazaProducidoTotal"
+    melaza: "melazaProducidoTotal",
+    alcoholEtilicoAnhidroBiocombustible: 'alcoholEtilicoAnhidroBiocombustible'
   }
 
   function normalizar(nombre) {

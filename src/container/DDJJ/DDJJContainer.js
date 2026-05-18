@@ -86,7 +86,7 @@ const DDJJContainer = ({ tokenAuth, dataUserRegister }) => {
 
   const quincenasOptions = useMemo(() => {
     if (!ddjjInformacion || !Array.isArray(ddjjInformacion)) return [{ label: 'Seleccione quincena', value: undefined }];
-
+    // console.log(ddjjInformacion)
     const unique = new Set();
     const options = [{ label: 'Seleccione quincena', value: undefined }];
     const meses = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
