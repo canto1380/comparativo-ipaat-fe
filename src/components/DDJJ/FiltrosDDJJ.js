@@ -14,7 +14,6 @@ const FiltrosDDJJ = ({
   setEstadoDDJJInformacion,
 }) => {
   const getOrdenQuincena = (month, quincena) => month * 10 + quincena;
-
   return (
     <>
       <Col xs={12} md={6} lg={3} className="mb-1 mt-1">
