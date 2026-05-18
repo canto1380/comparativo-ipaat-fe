@@ -19,7 +19,6 @@ const DdjjComponent = ({
   setDdjjInformacionParseada
 }) => {
   useEffect(() => {
-    const aa = ddjjInformacionFilter?.filter((d) => d.ingenioNombre === "La Florida")
     const returnData = datosAcumuladosDDJJHook(
       ddjjInformacionFilter
     )
