@@ -2039,7 +2039,7 @@ export const dataPorTipo = (
       ? new Date(dataInicioIngenios.CellE22)
       : new Date(dataInicioIngenios.CellF22)
 
-    const fechaParametroLeales = dataInicioIngenios.Cell22
+    const fechaParametroLeales = dataInicioIngenios.CellE22
       ? (dataEnd > ultimoRegistrosLeales
         ? ultimoRegistrosLeales
         : new Date(dataEnd))
