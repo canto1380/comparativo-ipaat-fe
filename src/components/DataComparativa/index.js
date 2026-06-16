@@ -6,7 +6,6 @@ import Spinn from "../Spinner";
 const DataComparativaHistorica = ({
   dataRegisterEdit,
   dataComparativaData,
-  anio,
   aniosData,
   regionData
 }) => {
@@ -20,7 +19,6 @@ const DataComparativaHistorica = ({
         }`}
         btnBack={true}
         btnLink={"/admin/datos-comparativos"}
-        anio={anio}
       />
       <hr className="mx-3 mt-1" />
       {
@@ -32,7 +30,6 @@ const DataComparativaHistorica = ({
           <FormAddEditDataComparativa
             dataRegisterEdit={dataRegisterEdit}
             dataComparativaData={dataComparativaData}
-            anio={anio}
             aniosData={aniosData}
             regionData={regionData}
           />

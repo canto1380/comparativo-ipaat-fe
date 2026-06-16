@@ -1,12 +1,11 @@
 import { Button, Form, Input, Select, Spin } from "antd";
 import MsgError from "../Messages/MsgError";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { api } from "../../utils/api";
 
 const FormAddEditDataComparativa = ({
   dataRegisterEdit,
   dataComparativaData,
-  anio,
   aniosData,
   regionData
 }) => {
@@ -28,6 +27,7 @@ const FormAddEditDataComparativa = ({
     dataComparativaData,
     regionData
   ) => {
+    if(dataRegisterEdit) return aniosData
     // Validar que los datos existan
     if (!aniosData || !dataComparativaData) {
       return aniosData || [];
@@ -157,7 +157,7 @@ const FormAddEditDataComparativa = ({
   const updateDataComparativa = async (values) => {
     try {
       values.id_anio_zafra = dataRegisterEdit.id_anio_zafra
-      const res = await api("PATCH", `dataComparativa/${dataRegisterEdit?.id}`, values)
+      const res = await api("PATCH", `dataComparativa/${dataRegisterEdit?.id_anio_zafra}/${dataRegisterEdit?.id_region_ingenios}`, values)
       if (res.status === 200) {
         setLoading(true)
         setTimeout(() => {
@@ -196,7 +196,18 @@ const FormAddEditDataComparativa = ({
 
   // Obtener referencia al formulario para poder limpiar campos
   const [form] = Form.useForm();
+  useEffect(() => {
+    if (dataRegisterEdit) {
+      form.setFieldsValue({
+        id_anio_zafra: dataRegisterEdit.id_anio_zafra,
+        id_region_ingenios: dataRegisterEdit.id_region_ingenios,
+        CMB_DDJJ: dataRegisterEdit.CMB_DDJJ,
+        estimacion_EEAOC: dataRegisterEdit.estimacion_EEAOC,
+      });
 
+      setAnioSeleccionado(dataRegisterEdit.anio_zafra);
+    }
+  }, [dataRegisterEdit, form]);
   return (
     <div className="menuContainer">
 
@@ -215,7 +226,7 @@ const FormAddEditDataComparativa = ({
         onFinish={handleSubmit}
         onFinishFailed={onFinishFailed}
         initialValues={{
-          id_anio_zafra: dataRegisterEdit?.anio_zafra,
+          id_anio_zafra: dataRegisterEdit?.id_anio_zafra,
           CMB_DDJJ: dataRegisterEdit?.CMB_DDJJ,
           estimacion_EEAOC: dataRegisterEdit?.estimacion_EEAOC,
           id_region_ingenios: dataRegisterEdit?.nombre_region
@@ -261,9 +272,9 @@ const FormAddEditDataComparativa = ({
           />
         </Form.Item>
         <Form.Item
-          label="CMD por DDJJ"
+          label="CMB por DDJJ"
           name="CMB_DDJJ"
-          rules={[{ required: true, message: "Debe ingresar un valor" }]}
+          // rules={[{ required: true, message: "Debe ingresar un valor" }]}
         >
           <Input type="number" />
         </Form.Item>

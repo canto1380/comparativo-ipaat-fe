@@ -12,6 +12,7 @@ import { getDataComparativa } from "../../utils/queryAPI/dataComparativa";
 import { getAnios } from "../../utils/queryAPI/anios";
 import { getRegion } from "../../utils/queryAPI/region";
 import { SidebarContext } from "../../context/SidebarProvider";
+import { api } from "../../utils/api";
 
 const NewData = () => {
   const [dataComparativaData, setDataComparativaData] = useState(undefined);
@@ -21,17 +22,14 @@ const NewData = () => {
   const [loading, setLoading] = useState(false);
   const [aniosData, setAniosData] = useState(undefined);
   const [regionData, setRegionData] = useState(undefined)
-  
 
-  const { anio } = useParams();
+
+  const { anio, region } = useParams();
   const { dataUser } = useContext(User);
-
-  const {sidebarStatus} = useContext(SidebarContext)
+  const { sidebarStatus } = useContext(SidebarContext)
 
   useEffect(() => {
   }, [sidebarStatus])
-
-  let navigate = useNavigate();
 
   useEffect(() => {
     const token = getToken();
@@ -61,19 +59,15 @@ const NewData = () => {
   }, []);
 
   useEffect(() => {
-    getData();
+    getData()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [anio]);
+  }, [anio, region]);
   const getData = async () => {
     const data = await getDataComparativa();
     setDataComparativaData(data);
-    if(anio) {
-      const data1 = data.filter((d) => d.anio_zafra === parseInt(anio));
-      if (data1.length === 0) {
-        navigate("/admin/parte-diario");
-      } else {
-        setDataRegisterEdit(data1[0]);
-      }
+    if (anio && region) {
+      const dataEdit = await api("GET", `dataComparativa/${anio}/${region}`)
+      setDataRegisterEdit(dataEdit.data[0]);
     }
   };
 
@@ -112,7 +106,6 @@ const NewData = () => {
               <DataComparativaHistorica
                 dataRegisterEdit={dataRegisterEdit}
                 dataComparativaData={dataComparativaData}
-                anio={anio}
                 aniosData={aniosData}
                 regionData={regionData}
               />

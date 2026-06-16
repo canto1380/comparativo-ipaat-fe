@@ -34,12 +34,12 @@ const DataComparativaContainer = ({ tokenAuth, routeAPI }) => {
     setDataComparativa(data);
   };
 
-  const handleDelete = async (deleted, id) => {
+  const handleDelete = async (deleted, id_anio_zafra, id_region_ingenios) => {
     try {
       if (deleted) {
         const res = await api(
           "PATCH",
-          `${routeAPI}/restore/${id}`,
+          `${routeAPI}/restore/${id_anio_zafra}/${id_region_ingenios}`,
           null,
           tokenAuth
         );
@@ -56,7 +56,7 @@ const DataComparativaContainer = ({ tokenAuth, routeAPI }) => {
       } else {
         const res = await api(
           "PATCH",
-          `${routeAPI}/delete/${id}`,
+          `${routeAPI}/delete/${id_anio_zafra}/${id_region_ingenios}`,
           null,
           tokenAuth
         );
@@ -112,7 +112,7 @@ const DataComparativaContainer = ({ tokenAuth, routeAPI }) => {
             <Button
               className="bg-secondary btn-edit"
               key={record?._id}
-              href={`/admin/datos-comparativos/editar/${record?.anio_zafra}`}
+              href={`/admin/datos-comparativos/editar/${record?.id_anio_zafra}/${record?.id_region_ingenios}`}
               style={{ color: "white" }}
               icon={<EditOutlined className="" />}
               title="Editar"
@@ -120,7 +120,7 @@ const DataComparativaContainer = ({ tokenAuth, routeAPI }) => {
             <Button
               key={record?._id}
               className={`${record?.deleted ? "bg-success" : "bg-danger"}`}
-              onClick={() => handleDelete(record?.deleted, record?.id)}
+              onClick={() => handleDelete(record?.deleted, record?.id_anio_zafra, record?.id_region_ingenios)}
               type="primary"
               icon={
                 record?.deleted ? (

@@ -2839,7 +2839,6 @@ export const dataPorTipo = (
 
   azucarPanel = azucarPanelCrudo + azucarPanelBlancoA + azucarPanelRefinado + azucarPanelOrganico + azucarPanelOtros
   /** NORTE **/
-
   dataImportNorte?.forEach((data) => {
     const newDate = new Date(data.fechaParte)
 
@@ -2955,7 +2954,14 @@ export const dataPorTipo = (
       i17 = i17 + data.azucarOrganico || 0;
       j17 = j17 + data.otroAzucar || 0;
       k17 = k17 + data.azucarBlancoProducido;
-      l17 = l17 + (data.azucarCrudoProducido <= 0 ? - data.azucarRefinado - data.otroAzucar : data.azucarCrudoProducido - data.azucarRefinado - data.otroAzucar);
+      // l17 = l17 + zafraParteDiario < 2026 ? (data.azucarCrudoProducido <= 0 ? - data.azucarRefinado - data.otroAzucar : data.azucarCrudoProducido - data.azucarRefinado - data.otroAzucar) : data.azucarCrudoProducido;
+      const calculoAntiguoLedesma = zafraParteDiario < 2026
+        ? l17 + (data.azucarCrudoProducido <= 0 ? - data.azucarRefinado - data.otroAzucar : data.azucarCrudoProducido - data.azucarRefinado - data.otroAzucar)
+        : l17 + data.azucarCrudoProducido;
+
+      l17 = calculoAntiguoLedesma;
+
+      // l17 = l17 + (data.azucarCrudoProducido <= 0 ? - data.azucarRefinado - data.otroAzucar : data.azucarCrudoProducido - data.azucarRefinado - data.otroAzucar);
       dataLedesma = {
         E45: a17,
         F45: b17,
