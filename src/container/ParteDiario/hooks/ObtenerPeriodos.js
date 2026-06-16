@@ -11,11 +11,25 @@ export function obtenerPeriodos(data, regionId) {
 
   // Filtrar los datos por regionId antes del forEach
   const datosFiltrados = data?.filter(item => item.id_region_ingenios === regionId) || [];
-  
+
   // Verificar si todos los items tienen fin_zafra
   const todosTienenFinZafra = datosFiltrados.length > 0 && datosFiltrados.every(item => item.fin_zafra);
-  const todosTienenFinDestileria = datosFiltrados.length > 0 && datosFiltrados.every(item => item.fin_destileria);
-  const todosTienenFinAnhidro = datosFiltrados.length > 0 && datosFiltrados.every(item => item.fin_anhidro);
+
+  const ingeniosConDestileria = datosFiltrados.filter(
+    item => item.inicio_destileria
+  );
+  const todosTienenFinDestileria =
+  ingeniosConDestileria.length > 0 &&
+  ingeniosConDestileria.every(item => item.fin_destileria);
+
+  const ingeniosConAnhidro = datosFiltrados.filter(
+    item => item.inicio_anhidro
+  );
+  const todosTienenFinAnhidro = 
+    ingeniosConAnhidro.length > 0 &&
+    ingeniosConAnhidro.every(item => item.fin_anhidro);
+
+  // const todosTienenFinAnhidro = datosFiltrados.length > 0 && datosFiltrados.every(item => item.fin_anhidro);
   datosFiltrados.forEach(item => {
     // Zafra
     if (item.inicio_zafra) {

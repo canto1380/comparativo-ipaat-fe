@@ -8,7 +8,7 @@ import { User } from "../../context/UserProvider";
 import { dataComparativaPorTipo } from "./DataComparativa";
 import { dataPorTipo } from "./DataOriginal";
 import { getDataComparativa } from "../../utils/queryAPI/dataComparativa";
-import { getDataToken } from "../../helpers/helpers";
+import { diasEntreFechas, getDataToken } from "../../helpers/helpers";
 import "./parteDiario.css";
 import moment from "moment";
 import { apiExportExcel } from "../../utils/apiExportExcel";
@@ -520,30 +520,8 @@ const ParteDiario = ({
   }
 
   const cantidadDiasZafraComparativaTucuman = () => {
-    let diasZafra = 0
-    const fin = new Date(finZafraComparativa)
-    const inicio = new Date(inicioZafraComparativa)
-    const fechaParteSeleccionada = new Date(dataEnd)
-    const anioFechaParteComparativaSeleccionada = fechaParteSeleccionada.getFullYear() - 1
-    const fechaParteComparativaSeleccionada = new Date(fechaParteSeleccionada)
-    fechaParteComparativaSeleccionada.setFullYear(anioFechaParteComparativaSeleccionada)
-
-    if (inicioZafraComparativa && finZafraComparativa) {
-      if (fechaParteComparativaSeleccionada < finZafraComparativa) {
-        diasZafra = ((fechaParteComparativaSeleccionada - inicio) / (1000 * 60 * 60 * 24)) + 1
-      }
-      if (fechaParteComparativaSeleccionada >= finZafraComparativa) {
-        diasZafra = ((fin - inicio) / (1000 * 60 * 60 * 24)) + 1
-      }
-    }
-
-    if (inicioZafraComparativa && (!finZafraComparativa || finZafraComparativa === null)) {
-      diasZafra = ((fechaParteComparativaSeleccionada - inicio) / (1000 * 60 * 60 * 24)) + 1
-    }
-    if (!inicioZafraComparativa || inicioZafraComparativa === null) {
-      diasZafra = 0
-    }
-    setDataDiasZafraComparativa(diasZafra)
+    const diasZafraComparativa = diasEntreFechas(inicioZafraComparativa, finZafraComparativa)
+    setDataDiasZafraComparativa(diasZafraComparativa)
   }
 
   useEffect(() => {
@@ -575,31 +553,8 @@ const ParteDiario = ({
     setDataDiasDestileria(diasDestileria)
   }
   const cantidadDiasDestileriaComparativaTucuman = () => {
-    let diasDestileria = 0
-    const fin = new Date(finDestileriaComparativa)
-    const inicio = new Date(inicioDestileriaComparativa)
-    const fechaParteSeleccionada = new Date(dataEnd)
-    const anioFechaParteComparativaSeleccionada = fechaParteSeleccionada.getFullYear() - 1
-    const fechaParteComparativaSeleccionada = new Date(fechaParteSeleccionada)
-    fechaParteComparativaSeleccionada.setFullYear(anioFechaParteComparativaSeleccionada)
-
-    if (inicioDestileriaComparativa && finDestileriaComparativa) {
-      if (fechaParteComparativaSeleccionada < finDestileriaComparativa) {
-        diasDestileria = ((fechaParteComparativaSeleccionada - inicio) / (1000 * 60 * 60 * 24)) + 1
-      }
-      if (fechaParteComparativaSeleccionada >= finDestileriaComparativa) {
-        diasDestileria = ((fin - inicio) / (1000 * 60 * 60 * 24)) + 1
-      }
-    }
-
-    if (inicioDestileriaComparativa && (!finDestileriaComparativa || finDestileriaComparativa === null)) {
-      diasDestileria = ((fechaParteComparativaSeleccionada - inicio) / (1000 * 60 * 60 * 24)) + 1
-
-    }
-    if (!inicioDestileriaComparativa || inicioDestileriaComparativa === null) {
-      diasDestileria = 0
-    }
-    setDataDiasDestileriaComparativa(diasDestileria)
+    const diasDestileriaComparativa = diasEntreFechas(inicioDestileriaComparativa, finDestileriaComparativa)
+    setDataDiasDestileriaComparativa(diasDestileriaComparativa)
   }
 
   useEffect(() => {
@@ -631,31 +586,8 @@ const ParteDiario = ({
     setDataDiasAnhidro(diasAnhidro)
   }
   const cantidadDiasAnhidroComparativaTucuman = () => {
-    let diasAnhidro = 0
-    const fin = new Date(finAnhidroComparativa)
-    const inicio = new Date(inicioAnhidroComparativa)
-    const fechaParteSeleccionada = new Date(dataEnd)
-    const anioFechaParteComparativaSeleccionada = fechaParteSeleccionada.getFullYear() - 1
-    const fechaParteComparativaSeleccionada = new Date(fechaParteSeleccionada)
-    fechaParteComparativaSeleccionada.setFullYear(anioFechaParteComparativaSeleccionada)
-
-    if (inicioAnhidroComparativa && finAnhidroComparativa) {
-      if (fechaParteComparativaSeleccionada < finAnhidroComparativa) {
-        diasAnhidro = ((fechaParteComparativaSeleccionada - inicio) / (1000 * 60 * 60 * 24)) + 1
-      }
-      if (fechaParteComparativaSeleccionada >= finAnhidroComparativa) {
-        diasAnhidro = ((fin - inicio) / (1000 * 60 * 60 * 24)) + 1
-      }
-    }
-
-    if (inicioAnhidroComparativa && (!finAnhidroComparativa || finAnhidroComparativa === null)) {
-      diasAnhidro = ((fechaParteComparativaSeleccionada - inicio) / (1000 * 60 * 60 * 24)) + 1
-
-    }
-    if (!inicioAnhidroComparativa || inicioAnhidroComparativa === null) {
-      diasAnhidro = 0
-    }
-    setDataDiasAnhidroComparativa(diasAnhidro)
+    const diasAnhidroComparativa = diasEntreFechas(inicioAnhidroComparativa, finAnhidroComparativa)
+    setDataDiasAnhidroComparativa(diasAnhidroComparativa)
   }
 
   /********** NORTE **********/
@@ -826,7 +758,7 @@ const ParteDiario = ({
     }
     setDataDiasAnhidroNorteComparativa(diasAnhidro)
   }
-  
+
   /*** ESTIMACIONES ***/
   let estimacionEEAOC;
   dataComparativa?.forEach((d) => {

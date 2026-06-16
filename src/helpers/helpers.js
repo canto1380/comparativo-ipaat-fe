@@ -190,3 +190,10 @@ export const formatValue = (value) => {
     maximumFractionDigits: 2
   })
 }
+
+export const diasEntreFechas = (fecha1, fecha2) => {
+  const msPorDia = 1000 * 60 * 60 * 24;
+  return Math.floor(
+    ((new Date(fecha2) - new Date(fecha1)) / msPorDia) + 1
+  );
+}
