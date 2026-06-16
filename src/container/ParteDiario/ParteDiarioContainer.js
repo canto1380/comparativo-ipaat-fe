@@ -132,6 +132,7 @@ const ParteDiarioContainer = () => {
       /** TUCUMAN **/
       const periodosActual = obtenerPeriodos(dateInicioIngenios, 1);
       setPeriodosTucumanActual(periodosActual)
+
       const periodoComparativo = obtenerPeriodos(dateFinIngenios, 1);
       setPeriodosTucumanComparativo(periodoComparativo)
 
