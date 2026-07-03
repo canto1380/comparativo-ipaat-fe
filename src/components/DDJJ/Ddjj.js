@@ -16,14 +16,19 @@ const DdjjComponent = ({
   ddjjInformacionFilter,
   ddjjInformacionParseada,
   estadoDDJJInformacion,
-  setDdjjInformacionParseada
+  setDdjjInformacionParseada,
+  periodosZafra
 }) => {
   useEffect(() => {
+
+    const a = ddjjInformacionFilter.filter(d => d.ingenioNombre === "La Trinidad")
+    console.log(a)
     const returnData = datosAcumuladosDDJJHook(
-      ddjjInformacionFilter
+      ddjjInformacionFilter,
+      periodosZafra
     )
     setDdjjInformacionParseada(returnData)
-  }, [ddjjInformacionFilter])
+  }, [ddjjInformacionFilter, periodosZafra])
 
 
   /**

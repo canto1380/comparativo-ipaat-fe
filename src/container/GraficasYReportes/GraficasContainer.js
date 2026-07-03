@@ -4,14 +4,27 @@ import { useEffect, useState } from "react"
 import { getPeriodoZafra } from "../../utils/queryAPI/periodosZafra"
 import Spinn from "../../components/Spinner"
 import { obtenerPeriodos } from "../ParteDiario/hooks/ObtenerPeriodos"
-import { filtrarRegistrosPorPeriodos } from "../ParteDiario/hooks/RegistrosPorPeriodo"
+import { filtrarRegistrosPorPeriodos, filtrarRegistrosPorPeriodosIngenio } from "../ParteDiario/hooks/RegistrosPorPeriodo"
 import { getParteDiariosNorte } from "../../utils/queryAPI/ParteDiariosNorte"
 import { getParteDiarios } from "../../utils/queryAPI/parteDiarios"
 import { Tabs } from "antd"
 import { itemsRportes } from "./ItemsGraficas"
 import { procesarTodosLosIngenios } from "../../utils/hooks/procesarIngeniosHooks"
 import { getAnios } from "../../utils/queryAPI/anios"
-
+import {
+  anhidroLeales,
+  anhidroConcepcion,
+  anhidroBellaVista,
+  anhidroBellaVista2023,
+  anhidroConcepcion2023,
+  anhidroLeales2023,
+  anhidroBellaVista2024,
+  anhidroConcepcion2024,
+  anhidroLeales2024,
+  anhidroBellaVista2025
+} from "../../utils/data/AnhidroSinDeclarar"
+import { getMesAnio } from "../../helpers/helpers"
+import { procesarAnhidroSinDeclarar } from "../../utils/hooks/procesarAnhidroSinDeclararHooks"
 const GraficasDataContainer = ({ tokenAuth, dataUserRegister, routeAPI }) => {
   /** Filtros tab 1 **/
   const [ingenio, setIngenio] = useState(undefined)
@@ -70,6 +83,11 @@ const GraficasDataContainer = ({ tokenAuth, dataUserRegister, routeAPI }) => {
   const [dataAnioEndDestileriaNorte, setDataAnioEndDestileriaNorte] = useState(undefined)
   const [dataAnioEndAnhidroNorte, setDataAnioEndAnhidroNorte] = useState(undefined)
 
+  /** State para anhidro sin declarar en Parte Diario **/
+  const [anhidroLealesSinDeclarar, setAnhidroLealesSinDeclarar] = useState(undefined)
+  const [anhidroBellaVistaSinDeclarar, setAnhidroBellaVistaSinDeclarar] = useState(undefined)
+  const [anhidroConcepcionSinDeclarar, setAnhidroConcepcionSinDeclarar] = useState(undefined)
+
 
 
   /*** PARTES DIARIOS DB - TUCUMAN Y NORTE ***/
@@ -101,7 +119,6 @@ const GraficasDataContainer = ({ tokenAuth, dataUserRegister, routeAPI }) => {
     setAnioZafra(aniosData[0].anio_zafra)
   }
 
-
   /********************************************************* TABS 1 *******************************************************/
   const periodosPorZafra = async () => {
     if (!anioZafra) return; // evitar consulta sin año definido
@@ -110,21 +127,62 @@ const GraficasDataContainer = ({ tokenAuth, dataUserRegister, routeAPI }) => {
     setPeriodosZafra(data);
   }
 
+  /** LOGICA DE ANHIDRO SIN DECLARAR **/
+  useEffect(() => {
+    if (anioZafra) filtrarAnhidroSinDeclarar()
+  }, [anioZafra, datePeriodoStart, datePeriodoEnd])
+  const filtrarAnhidroSinDeclarar = () => {
+    const zafra = Number(anioZafra)
+    let lealesAnhidro = 0
+    let bellaVistaAnhidro = 0
+    let concepcionAnhidro = 0
+    /** Hooks para calculo de anhidro sin declarar por zafra, ingenio y meses **/
+    const { lealesAnhidro: lealesAnhidro2, bellaVistaAnhidro: bellaVistaAnhidro2, concepcionAnhidro: concepcionAnhidro2 } = procesarAnhidroSinDeclarar(
+      datePeriodoStart,
+      datePeriodoEnd,
+      zafra,
+      lealesAnhidro,
+      bellaVistaAnhidro,
+      concepcionAnhidro,
+      anhidroLeales2023,
+      anhidroBellaVista2023,
+      anhidroConcepcion2023
+    )
+    const aplicarValores = (lealesAnhidro2, bellaVistaAnhidro2, concepcionAnhidro2) => {
+      setAnhidroLealesSinDeclarar(lealesAnhidro2)
+      setAnhidroBellaVistaSinDeclarar(bellaVistaAnhidro2)
+      setAnhidroConcepcionSinDeclarar(concepcionAnhidro2)
+    }
+    aplicarValores(lealesAnhidro2, bellaVistaAnhidro2, concepcionAnhidro2)
+  }
+
 
   /** FILTRA PERIODO Y DATOS EN PERIODO ELEGIDO POR ANIO **/
   useEffect(() => {
     if (dataParteDiarios && periodosZafra) {
       const regionId = typeof region === 'string' && region !== 'Todos' ? parseInt(region) : region;
-
       // Si no hay región seleccionada o es 'Todos', mostrar ambas regiones
       const mostrarTucuman = !region || region === 'Todos' || regionId === 1;
       const mostrarNorte = !region || region === 'Todos' || regionId === 2;
 
       /** TUCUMAN **/
       if (mostrarTucuman) {
-        const periodoActualTucuman = obtenerPeriodos(periodosZafra, 1)
-        const { dataZafra1, dataDestileria1, dataAnhidro1 } =
-          filtrarRegistrosPorPeriodos(periodoActualTucuman, dataParteDiarios, new Date())
+        // const periodoActualTucuman = obtenerPeriodos(periodosZafra, 1)
+        // const { dataZafra1, dataDestileria1, dataAnhidro1 } =
+        //   filtrarRegistrosPorPeriodos(periodoActualTucuman, dataParteDiarios, new Date())
+        const {
+          dataZafra1,
+          dataDestileria1,
+          dataAnhidro1
+        } =
+          filtrarRegistrosPorPeriodosIngenio(
+            periodosZafra,
+            dataParteDiarios,
+            1,
+            new Date(),
+            anioZafra
+          )
+
         setDataZafraGrafica(dataZafra1)
         setDataDestilacionGrafica(dataDestileria1)
         setDataAnhidroGrafica(dataAnhidro1)
@@ -133,13 +191,6 @@ const GraficasDataContainer = ({ tokenAuth, dataUserRegister, routeAPI }) => {
         setDataDestilacionGraficaFilter(dataDestileria1)
         setDataAnhidroGraficaFilter(dataAnhidro1)
 
-        const resultado = procesarTodosLosIngenios(
-          periodosZafra,
-          dataZafra1,
-          dataDestileria1,
-          dataAnhidro1,
-          1
-        )
       } else {
         setDataZafraGraficaFilter(undefined)
         setDataDestilacionGraficaFilter(undefined)
@@ -148,9 +199,21 @@ const GraficasDataContainer = ({ tokenAuth, dataUserRegister, routeAPI }) => {
 
       /** NORTE **/
       if (mostrarNorte) {
-        const periodosActualNorte = obtenerPeriodos(periodosZafra, 2)
-        const { dataZafra1, dataDestileria1, dataAnhidro1 } =
-          filtrarRegistrosPorPeriodos(periodosActualNorte, dataParteDiariosNorte, new Date())
+        // const periodosActualNorte = obtenerPeriodos(periodosZafra, 2)
+        // const { dataZafra1, dataDestileria1, dataAnhidro1 } =
+        //   filtrarRegistrosPorPeriodos(periodosActualNorte, dataParteDiariosNorte, new Date())
+        const {
+          dataZafra1,
+          dataDestileria1,
+          dataAnhidro1
+        } =
+          filtrarRegistrosPorPeriodosIngenio(
+            periodosZafra,
+            dataParteDiariosNorte,
+            2,
+            new Date(),
+            anioZafra
+          )
 
         setDataZafraGraficaNorte(dataZafra1)
         setDataDestilacionGraficaNorte(dataDestileria1)
@@ -159,6 +222,14 @@ const GraficasDataContainer = ({ tokenAuth, dataUserRegister, routeAPI }) => {
         setDataZafraGraficaNorteFilter(dataZafra1)
         setDataDestilacionGraficaNorteFilter(dataDestileria1)
         setDataAnhidroGraficaNorteFilter(dataAnhidro1)
+
+        const resultado = procesarTodosLosIngenios(
+          periodosZafra,
+          dataZafra1,
+          dataDestileria1,
+          dataAnhidro1,
+          1
+        )
       } else {
         setDataZafraGraficaNorteFilter(undefined)
         setDataDestilacionGraficaNorteFilter(undefined)
@@ -185,7 +256,6 @@ const GraficasDataContainer = ({ tokenAuth, dataUserRegister, routeAPI }) => {
           anhidro: undefined
         };
       }
-
       let zafraFiltered = [...zafraData];
       let destilacionFiltered = [...destData];
       let anhidroFiltered = [...anhidroData];
@@ -202,7 +272,6 @@ const GraficasDataContainer = ({ tokenAuth, dataUserRegister, routeAPI }) => {
               ? new Date(periodoIngenioSeleccionado[0].fin_zafra)
               : new Date(periodoIngenioSeleccionado[0].fin_datos_zafra)
             : new Date();
-
           const inicioDestileria = new Date(periodoIngenioSeleccionado[0].inicio_destileria);
           const finDestileria = periodoIngenioSeleccionado[0].fin_destileria
             ? new Date(periodoIngenioSeleccionado[0].fin_destileria)
@@ -262,7 +331,6 @@ const GraficasDataContainer = ({ tokenAuth, dataUserRegister, routeAPI }) => {
       mostrarNorte
         ? aplicarFiltros(dataZafraGraficaNorte, dataDestilacionGraficaNorte, dataAnhidroGraficaNorte)
         : { zafra: undefined, destilacion: undefined, anhidro: undefined };
-
     setDataZafraGraficaFilter(zafraTucuman);
     setDataDestilacionGraficaFilter(destTucuman);
     setDataAnhidroGraficaFilter(anhidroTucuman);
@@ -314,17 +382,21 @@ const GraficasDataContainer = ({ tokenAuth, dataUserRegister, routeAPI }) => {
 
       /** TUCUMAN  **/
       if (mostrarTucuman) {
-        const periodoStartTucuman = obtenerPeriodos(periodosAnioStart, 1)
-        const { dataZafra1, dataDestileria1, dataAnhidro1 } =
-          filtrarRegistrosPorPeriodos(periodoStartTucuman, dataParteDiarios, new Date())
+        const {
+          dataZafra1,
+          dataDestileria1,
+          dataAnhidro1
+        } = filtrarRegistrosPorPeriodosIngenio(periodosAnioStart, dataParteDiarios, 1, new Date(), anioStart)
 
         setDataAnioStartZafraTucuman(dataZafra1)
         setDataAnioStartDestileriaTucuman(dataDestileria1)
         setDataAnioStartAnhidroTucuman(dataAnhidro1)
 
-        const periodoEndTucuman = obtenerPeriodos(periodosAnioEnd, 1)
-        const { dataZafra1: dataZafra2, dataDestileria1: dataDestileria2, dataAnhidro1: dataAnhidro2 } =
-          filtrarRegistrosPorPeriodos(periodoEndTucuman, dataParteDiarios, new Date())
+        const {
+          dataZafra1: dataZafra2,
+          dataDestileria1: dataDestileria2,
+          dataAnhidro1: dataAnhidro2
+        } = filtrarRegistrosPorPeriodosIngenio(periodosAnioEnd, dataParteDiarios, 1, new Date(), anioEnd)
 
         setDataAnioEndZafraTucuman(dataZafra2)
         setDataAnioEndDestileriaTucuman(dataDestileria2)
@@ -341,17 +413,24 @@ const GraficasDataContainer = ({ tokenAuth, dataUserRegister, routeAPI }) => {
 
       /** NORTE **/
       if (mostrarNorte) {
-        const periodoStartNorte = obtenerPeriodos(periodosAnioStart, 2)
-        const { dataZafra1: dataZafra3, dataDestileria1: dataDestileria3, dataAnhidro1: dataAnhidro3 } =
-          filtrarRegistrosPorPeriodos(periodoStartNorte, dataParteDiariosNorte, new Date())
+        // const periodoStartNorte = obtenerPeriodos(periodosAnioStart, 2)
+        // const { dataZafra1: dataZafra3, dataDestileria1: dataDestileria3, dataAnhidro1: dataAnhidro3 } =
+        //   filtrarRegistrosPorPeriodos(periodoStartNorte, dataParteDiariosNorte, new Date())
+        const {
+          dataZafra1: dataZafra3,
+          dataDestileria1: dataDestileria3,
+          dataAnhidro1: dataAnhidro3
+        } = filtrarRegistrosPorPeriodosIngenio(periodosAnioStart, dataParteDiariosNorte, 2, new Date(), anioStart)
 
         setDataAnioStartZafraNorte(dataZafra3)
         setDataAnioStartDestileriaNorte(dataDestileria3)
         setDataAnioStartAnhidroNorte(dataAnhidro3)
 
-        const periodoEndNorte = obtenerPeriodos(periodosAnioEnd, 2)
-        const { dataZafra1: dataZafra4, dataDestileria1: dataDestileria4, dataAnhidro1: dataAnhidro4 } =
-          filtrarRegistrosPorPeriodos(periodoEndNorte, dataParteDiariosNorte, new Date())
+        const {
+          dataZafra1: dataZafra4,
+          dataDestileria1: dataDestileria4,
+          dataAnhidro1: dataAnhidro4
+        } = filtrarRegistrosPorPeriodosIngenio(periodosAnioEnd, dataParteDiariosNorte, 2, new Date(), anioEnd)
 
         setDataAnioEndZafraNorte(dataZafra4)
         setDataAnioEndDestileriaNorte(dataDestileria4)
@@ -368,6 +447,7 @@ const GraficasDataContainer = ({ tokenAuth, dataUserRegister, routeAPI }) => {
 
     }
   }, [dataParteDiarios, periodosAnioEnd, periodosAnioStart, region])
+
   return (
     <Container fluid>
       <TitlePage titlePage="Gráficos" />
@@ -399,6 +479,9 @@ const GraficasDataContainer = ({ tokenAuth, dataUserRegister, routeAPI }) => {
               ingenio, // TAB 1
               datePeriodoStart, // TAB 1
               datePeriodoEnd, // TAB 1
+              anhidroLealesSinDeclarar, // TAB 1
+              anhidroBellaVistaSinDeclarar, // TAB 1
+              anhidroConcepcionSinDeclarar, // TAB 1
               periodosAnioStart, // TAB 2
               periodosAnioEnd, // TAB 2
               dataAnioStartZafraTucuman, // TAB 2

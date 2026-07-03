@@ -15,7 +15,8 @@ const items = [
 ]
 
 export const datosAcumuladosDDJJHook = (
-  ddjjInformacionFilter
+  ddjjInformacionFilter,
+  periodosZafra = []
 ) => {
 
   const diccionarioDeItem = {
@@ -35,6 +36,25 @@ export const datosAcumuladosDDJJHook = (
     return nombre.replace(/\s+/g, '').toLowerCase()
   }
 
+  function generarKeyPeriodo(nombreIngenio, anioZafra) {
+    return `${normalizar(nombreIngenio)}-${anioZafra}`
+  }
+
+  function esDjPosteriorInicioAnhidro(dj, periodosPorIngenio) {
+    // console.log(dj, periodosPorIngenio)
+    const periodo = periodosPorIngenio[generarKeyPeriodo(dj.ingenioNombre, dj.anioZafra)]
+      || periodosPorIngenio[normalizar(dj.ingenioNombre)]
+
+    if (!periodo?.inicio_anhidro || !dj?.fechaHasta) return false
+
+    const fechaHasta = new Date(dj.fechaHasta)
+    const inicioAnhidro = new Date(periodo.inicio_anhidro)
+
+    if (Number.isNaN(fechaHasta.getTime()) || Number.isNaN(inicioAnhidro.getTime())) return false
+
+    return fechaHasta >= inicioAnhidro
+  }
+
   function generarObjetoIngenio(nombreIngenio) {
     const obj = {}
     for (let item of items) {
@@ -48,6 +68,18 @@ export const datosAcumuladosDDJJHook = (
   for (let ing of listadoIngenios) {
     data[ing] = generarObjetoIngenio(ing)
   }
+
+  const periodosPorIngenio = periodosZafra?.reduce((acc, periodo) => {
+    if (!periodo?.nombre_ingenio) return acc
+
+    acc[normalizar(periodo.nombre_ingenio)] = periodo
+
+    if (periodo.anio_zafra) {
+      acc[generarKeyPeriodo(periodo.nombre_ingenio, periodo.anio_zafra)] = periodo
+    }
+
+    return acc
+  }, {}) || {}
 
   let {
     aguilares,
@@ -78,13 +110,15 @@ export const datosAcumuladosDDJJHook = (
   })
 
   ddjjInformacionFilter?.forEach((d, i) => {
-    
     const ing = normalizar(d.ingenioNombre)
     // Si el ingenio no existe en tu data, lo ignoramos
     if (!data[ing]) return
-
     // Para cada item definido dinámicamente
     for (const item of items) {
+      if (item === "alcoholEtilicoAnhidroBiocombustible" && !esDjPosteriorInicioAnhidro(d, periodosPorIngenio)) {
+        continue
+      }
+
       const campoOrigen = diccionarioDeItem[item]  // ej: azCrudo → azucarCrudoProducido
       const valor = Number(d[campoOrigen]) || 0
       data[ing][`${ing}${item}`] += valor

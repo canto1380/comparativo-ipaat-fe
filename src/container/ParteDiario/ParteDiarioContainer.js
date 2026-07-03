@@ -98,7 +98,6 @@ const ParteDiarioContainer = () => {
     setLastUpdated(fecha);
   };
 
-
   const getDataNorte = async () => {
     const periodoActualNorte = obtenerPeriodos(dateInicioIngeniosItemCollapse, 2)
     const { dataZafra1, dataDestileria1, dataAnhidro1 } = filtrarRegistrosPorPeriodos(periodoActualNorte, dataParteDiariosNorte, new Date())

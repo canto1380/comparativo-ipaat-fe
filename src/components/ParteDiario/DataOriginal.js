@@ -1248,7 +1248,6 @@ export const dataPorTipo = (
   /*********************************************************************************/
   /****************************** DATOS ANHIDRO ALCOHOL ******************************/
   /** TUCUMAN **/
-
   dataImportAnhidro?.forEach((data) => {
     const newDate = new Date(data.fechaParte)
 
@@ -1916,24 +1915,6 @@ export const dataPorTipo = (
   dataImport?.forEach((data) => {
     const newDate = new Date(data.fechaParte)
     const fechaParametro = dataEnd !== null ? new Date(dataEnd) : new Date();
-    // if (newDate <= fechaParametro) {
-    //   // cmbPanel = cmbPanel + data.moliendaCanaBruta;
-    //   azucarPanel =
-    //     azucarPanel +
-    //     data.azucarBlancoProducido +
-    //     data.azucarCrudoProducido +
-    //     data.azucarRefinado +
-    //     data.azucarOrganico +
-    //     data.otroAzucar;
-    //   azucarPanelEquivalente = azucarPanelEquivalente + Number(data.azucarEquivalente.replace(/\./g, ''))
-    //   azucarPanelCrudo = azucarPanelCrudo + data?.azucarCrudoProducido
-    //   azucarPanelBlancoA = azucarPanelBlancoA + data?.azucarBlancoProducido
-    //   azucarPanelRefinado = azucarPanelRefinado + data?.azucarRefinado
-    //   azucarPanelOrganico = azucarPanelOrganico + data?.azucarOrganico
-    //   azucarPanelOtros = azucarPanelOtros + data?.otroAzucar
-
-    // }
-
 
     /** Aguilares **/
     const ultimoRegistrosAguilares = new Date(dataInicioIngenios.CellE10) >= new Date(dataInicioIngenios.CellF10)
@@ -2950,18 +2931,24 @@ export const dataPorTipo = (
         (data?.azucarOrganico || 0) +
         (data?.otroAzucar || 0);
       f17 = f17 + data.melazaProducida || 0;
-      h17 = h17 + data.azucarRefinado || 0;
       i17 = i17 + data.azucarOrganico || 0;
       j17 = j17 + data.otroAzucar || 0;
       k17 = k17 + data.azucarBlancoProducido;
-      // l17 = l17 + zafraParteDiario < 2026 ? (data.azucarCrudoProducido <= 0 ? - data.azucarRefinado - data.otroAzucar : data.azucarCrudoProducido - data.azucarRefinado - data.otroAzucar) : data.azucarCrudoProducido;
+      // h17 = h17 + data.azucarRefinado || 0;
+      /** PARCHE PARA ZAFRA 2024 y 2025  - AZUCAR REFINADO **/
+      const calculoAntiguoRefinado = zafraParteDiario < 2026
+        ? h17 + (newDate <= new Date(dataInicioIngeniosNorte.CellF45) && data.azucarRefinado)
+        : h17 + data.azucarRefinado
+      
+      h17 = calculoAntiguoRefinado
+
+      /** PARCHE PARA ZAFRA 2024 y 2025  - AZUCAR CRUDO **/
       const calculoAntiguoLedesma = zafraParteDiario < 2026
-        ? l17 + (data.azucarCrudoProducido <= 0 ? - data.azucarRefinado - data.otroAzucar : data.azucarCrudoProducido - data.azucarRefinado - data.otroAzucar)
+        // ? l17 + (data.azucarCrudoProducido <= 0 ? - data.azucarRefinado - data.otroAzucar : data.azucarCrudoProducido - data.azucarRefinado - data.otroAzucar)
+        ? l17 + (newDate <= new Date(dataInicioIngeniosNorte.CellF45) > 0 && data.azucarCrudoProducido - data.azucarRefinado - data.otroAzucar)
         : l17 + data.azucarCrudoProducido;
 
       l17 = calculoAntiguoLedesma;
-
-      // l17 = l17 + (data.azucarCrudoProducido <= 0 ? - data.azucarRefinado - data.otroAzucar : data.azucarCrudoProducido - data.azucarRefinado - data.otroAzucar);
       dataLedesma = {
         E45: a17,
         F45: b17,

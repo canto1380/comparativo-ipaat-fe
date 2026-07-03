@@ -47,7 +47,9 @@ export const anhidroLeales2023 = 26464761;
 export const anhidroConcepcion2023 = 35668460;
 export const anhidroBellaVista2023 = 9669715;
 
-export const anhidroLeales2024 = 27407947
+export const anhidroLeales2024 = 31541737
 export const anhidroConcepcion2024 = 63508852
 export const anhidroBellaVista2024 = 14796761
+
+export const anhidroBellaVista2025 = 7382750
 

@@ -46,11 +46,6 @@ const INGENIOS_ORDER = [
   "Seaboard",
 ];
 
-const panelStyle = {
-  marginBottom: 24,
-  border: "none",
-};
-
 const parseDate = (v) => {
   if (!v) return null;
   try {
@@ -93,7 +88,6 @@ const eliminarDuplicadosPorFechaIngenio = (arr = []) => {
 
 // Devuelve último día del mes (para el uso original)
 const getLastDayOfMonth = (month /* 1..12 */) => {
-
   const d = new Date(2020, month, 0);
   return d.getDate();
 };
@@ -268,6 +262,56 @@ const buildFinalRowsWithTotals = (rowsQuincena, rowsMes, rowsZafra) => {
   return [filaTotalQuincena, filaTotalMes, filaTotalZafra];
 };
 
+/** OBSERVACIONES PARA LOS ITEMS COLLAPSE **/
+const alcoholAnhidroNoDeclarado = [
+  ["Concepción", 2024, 63508852],
+  ["Concepción", 2023, 35668460],
+  ["Bella Vista", 2025, 7382750],
+  ["Bella Vista", 2024, 14796761],
+  ["Bella Vista", 2023, 9669715],
+  ["Leales", 2024, 31541737],
+  ["Leales", 2023, 26464761],
+];
+
+const observaciones = (nombre, dataZafra) => {
+  let observacion = null;
+
+  if (nombre === "Ledesma" && dataZafra === 2025) {
+    observacion = (
+      <>
+        Az. Crudo Final: Az. Crudo (304.187) - Az. Refinado (319.192) - Otros Az. (3.063) <br />
+        Az. Crudo Final: -18.068 [t]<br />
+        Az. Refinado: 319.192 [t]<br />
+        Otros AZ.: 3.063 [t]<br />
+        Az. Físico Total: 304.187 [t]<br />
+      </>
+    )
+  }
+  if (nombre === "Ledesma" && dataZafra === 2024) {
+    observacion = (
+      <>
+        Az. Crudo Final: Az. Crudo (280.697) - Az. Refinado (310.020) - Otros Az. (2.570) <br />
+        Az. Crudo Final: -18.068 [t]<br />
+        Az. Refinado: 319.192 [t]<br />
+        Otros AZ.: 3.063 [t]<br />
+        Az. Físico Total: 304.187 [t]<br />
+      </>
+    )
+  }
+
+  if (alcoholAnhidroNoDeclarado.some(([ingenio, anio, valor]) => ingenio === nombre && anio === dataZafra)) {
+    const registroAlcohol = alcoholAnhidroNoDeclarado.find(
+      ([ingenio, anio]) => ingenio === nombre && anio === dataZafra
+    );
+
+    if (registroAlcohol) {
+      observacion = `Alcohol anhidro no declarado: ${registroAlcohol[2].toLocaleString("es-AR")} `;
+    }
+  }
+  return observacion
+}
+
+
 const ItemsCollapse = ({
   dataAnio,
   dataMes,
@@ -277,6 +321,7 @@ const ItemsCollapse = ({
   dataParteDiariosHistoricosNorte,
   dateInicioIngeniosItemCollapse,
 }) => {
+  (dataParteDiariosHistoricosNorte)
   // Flatten both possible inputs (agrupados o planos) en una lista plana de partes
   const flatParts = useMemo(() => {
     const a = flattenParts(dataParteDiariosHistoricos || []);
@@ -309,13 +354,12 @@ const ItemsCollapse = ({
         quincenal: quincenal,
         mensual: mensual,
         zafra: zafra,
-        finalRows: [...quincenal, { ...filasTotales[0], key: `total-quincena-${ingenioNombre}` }, { ...filasTotales[1], key: `total-mes-${ingenioNombre}` }, { ...filasTotales[2], key: `total-zafra-${ingenioNombre}` }],
+        finalRows: [...quincenal, { ...filasTotales[0], key: `total - quincena - ${ingenioNombre} ` }, { ...filasTotales[1], key: `total - mes - ${ingenioNombre} ` }, { ...filasTotales[2], key: `total - zafra - ${ingenioNombre} ` }],
       };
     });
 
     return result;
   }, [flatParts, dataAnio, dataMes, dataQuincena]);
-
   // Construir items para Collapse manteniendo el orden INGENIOS_ORDER (y añadiendo los que no estén al final)
   const items = useMemo(() => {
     const entries = [];
@@ -324,17 +368,18 @@ const ItemsCollapse = ({
     const pushIfExists = (nombre) => {
       if (!ingeniosProcesados[nombre]) return;
       const data = ingeniosProcesados[nombre];
-      const label =
-        nombre === "Ledesma" ? (
-          <div>
-            <span>{nombre}</span>
-            <div style={{ fontSize: 12, color: "#888", fontWeight: 400 }}>
-              {/* * Alcohol campaña 2025 están incorrectos. Revisar. */}
-            </div>
+      const observacion = observaciones(nombre, dataZafra)
+
+      const label = observacion ? (
+        <div>
+          <span>{nombre}</span>
+          <div style={{ fontSize: 12, color: "#888", fontWeight: 700 }}>
+            * {observacion}
           </div>
-        ) : (
-          nombre
-        );
+        </div>
+      ) : (
+        nombre
+      );
 
       entries.push({
         key: nombre,
