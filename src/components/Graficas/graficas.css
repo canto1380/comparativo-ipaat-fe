@@ -1,18 +1,18 @@
 .containerGrafica {
     box-shadow: 1em;
-    height: 420px;
-    padding: 20px;
+    min-height: 370px;
     background: #ffffff;
     /* fondo blanco */
     border-radius: 12px;
     /* esquinas redondeadas */
     padding: 20px;
     /* espacio interno */
-    border: 1px solid rgba(0, 0, 0, 0.08);
+    border: 10px solid rgba(0, 0, 0, 0.08);
     /* borde sutil */
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
     /* sombra elegante */
     transition: all 0.3s ease;
+
 }
 
 .containerGrafica:hover {
@@ -20,6 +20,10 @@
     /* más sombra al hover */
     transform: translateY(-2px);
     /* efecto flotante */
+}
+
+.chart-wrapper {
+  height: 320px;
 }
 
 .dropdown-export {
@@ -31,3 +35,49 @@
     position: relative;
     z-index: 9999 !important;
   }
+
+  .observaciones-container {
+    margin-top: 25px;
+    padding-top: 15px;
+    border-top: 1px solid #dee2e6;
+}
+
+.observaciones-title {
+    font-weight: 700;
+    color: #1f3a68;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.8rem;
+}
+
+.observacion-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+
+    margin-bottom: 5px;
+    padding: 6px 14px;
+
+    background: #f8f9fa;
+    border-left: 4px solid #0d6efd;
+    border-radius: 6px;
+
+    font-size: 0.8rem;
+    color: #495057;
+}
+
+.observacion-label {
+    background: #0d6efd;
+    color: white;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.observacion-item strong {
+    color: #212529;
+    font-weight: 700;
+}

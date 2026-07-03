@@ -197,3 +197,17 @@ export const diasEntreFechas = (fecha1, fecha2) => {
     ((new Date(fecha2) - new Date(fecha1)) / msPorDia) + 1
   );
 }
+
+/**
+ * FUNCION QUE RECIBE FECHA
+ * RETORNA PAR {MES, ANIO}
+ * 
+ **/
+export const getMesAnio = (date) => {
+  if (date === null || date === undefined) return
+  const d = new Date(date)
+  const mes = d.getMonth() + 1
+  const anio = d.getFullYear()
+  
+  return {mes, anio}
+}

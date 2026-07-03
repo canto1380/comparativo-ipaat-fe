@@ -40,7 +40,10 @@ const GraficasLinealComponent = ({
     datePeriodoStart,
     datePeriodoEnd,
     routeAPI,
-    region
+    region,
+    anhidroLealesSinDeclarar,
+    anhidroBellaVistaSinDeclarar,
+    anhidroConcepcionSinDeclarar,
 }) => {
     const graficasRefs = useRef([]); // guardamos refs a los componentes hijos
     const [graficasSeleccionadas, setGraficasSeleccionadas] = useState([]);
@@ -67,7 +70,6 @@ const GraficasLinealComponent = ({
         ...(mostrarNorte && Array.isArray(dataAnhidroGraficaNorte) ? dataAnhidroGraficaNorte : []),
     ];
 
-
     /**** PROCESAMIENTO DE DATOS DE ZAFRA ****/
     // Agrupar por fecha y sumar todas las métricas
     const agrupadoPorFechaZafra = registrosZafra.reduce((acc, r) => {
@@ -92,7 +94,7 @@ const GraficasLinealComponent = ({
         acc[fecha].moliendaCanaBruta += Number(r?.moliendaCanaBruta || 0);
         acc[fecha].moliendaCanaNeta += Number(r?.moliendaCanaNeta || 0);
         acc[fecha].azucarBlanco += Number(r?.azucarBlancoProducido || 0);
-        if(r.ingenioNombre === 'Ledesma') {
+        if (r.ingenioNombre === 'Ledesma') {
             acc[fecha].azucarCrudo += Number(r?.azucarCrudoProducido < 0 ? r?.azucarRefinado - r?.otroAzucar : r?.azucarCrudoProducido - r?.azucarRefinado - r?.otroAzucar);
         } else {
             acc[fecha].azucarCrudo += Number(r?.azucarCrudoProducido || 0);
@@ -115,7 +117,6 @@ const GraficasLinealComponent = ({
 
     // Labels
     const labelsZafra = fechasOrdenadas;
-
     // Series
     const serieCanaMolidaBruta = fechasOrdenadas.map(f => agrupadoPorFechaZafra[f].moliendaCanaBruta);
     const serieMoliendaCanaNeta = fechasOrdenadas.map(f => agrupadoPorFechaZafra[f].moliendaCanaNeta);
@@ -241,7 +242,6 @@ const GraficasLinealComponent = ({
         acc[fecha].alcoholAnhidro += Number(r?.alcoholAnhidro || 0);
         return acc;
     }, {});
-
     // Ordenar las fechas
     const fechasOrdenadasAnhidro = Object.keys(agrupadoPorFechaAnhidro).sort(
         (a, b) => new Date(a) - new Date(b)
@@ -263,10 +263,8 @@ const GraficasLinealComponent = ({
     });
 
     // const labelsAnhidro = registrosAnhidro.map((r) => new Date(r?.fechaParte).toLocaleDateString('es-AR'));
-
-
-    const hayDatos = labelsDestilacion.length > 0 || labelsAnhidro.length > 0 && labelsZafra.length > 0 && (serieCanaMolidaBruta.some(v => v) || serieAzucarBlanco.some(v => v));
-
+    // const hayDatos = (labelsDestilacion.length > 0 || labelsAnhidro.length > 0 || labelsZafra.length > 0) && (serieCanaMolidaBruta.some(v => v) || serieAzucarBlanco.some(v => v));
+    const hayDatos = (labelsDestilacion.length > 0 || labelsAnhidro.length > 0 || labelsZafra.length > 0)
 
     // Resetea selección cuando cambia el ingenio
     useEffect(() => {
@@ -312,7 +310,6 @@ const GraficasLinealComponent = ({
             toast.error("Error exportando gráficas seleccionadas");
         }
     };
-
     return (
         <>
             {!hayDatos ? (
@@ -760,6 +757,9 @@ const GraficasLinealComponent = ({
                                     valores={serieAcumuladoAnhidro}
                                     routeAPI={routeAPI}
                                     onSeleccionarGrafica={handleSeleccionGrafica}
+                                    anhidroLealesSinDeclarar={anhidroLealesSinDeclarar}
+                                    anhidroBellaVistaSinDeclarar={anhidroBellaVistaSinDeclarar}
+                                    anhidroConcepcionSinDeclarar={anhidroConcepcionSinDeclarar}
                                 />
                             </Col>
                         </Row>

@@ -22,6 +22,9 @@ export const itemsRportes = (props = {}) => {
         ingenio,
         datePeriodoStart,
         datePeriodoEnd,
+        anhidroLealesSinDeclarar,
+        anhidroBellaVistaSinDeclarar,
+        anhidroConcepcionSinDeclarar,
         periodosAnioStart,
         periodosAnioEnd,
         dataAnioStartZafraTucuman,
@@ -44,6 +47,7 @@ export const itemsRportes = (props = {}) => {
         routeAPI,
 
     } = props;
+
     return [
         {
             key: '1',
@@ -80,6 +84,9 @@ export const itemsRportes = (props = {}) => {
                         datePeriodoEnd={datePeriodoEnd}
                         routeAPI={routeAPI}
                         region={region}
+                        anhidroLealesSinDeclarar={anhidroLealesSinDeclarar}
+                        anhidroBellaVistaSinDeclarar={anhidroBellaVistaSinDeclarar}
+                        anhidroConcepcionSinDeclarar={anhidroConcepcionSinDeclarar}
                     />
                 </>
             ),
@@ -124,10 +131,10 @@ export const itemsRportes = (props = {}) => {
                 </>
             ),
         },
-        {
-            key: '3',
-            label: 'Tab 3',
-            children: 'Content of Tab Pane 3',
-        },
+        // {
+        //     key: '3',
+        //     label: 'Tab 3',
+        //     children: 'Content of Tab Pane 3',
+        // },
     ];
 } 

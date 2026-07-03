@@ -27,6 +27,7 @@ import DdjjReporteComponent from "../../components/DDJJ/ReporteDinamico/DdjjRepo
 import { optionsQuincenal } from "../../components/Filtros/dataFilter"
 import { DDJJ_ITEMS_REPORTE } from "../../components/DDJJ/ReporteDinamico/ItemsFilter"
 import moment from "moment"
+import { getPeriodoZafra } from "../../utils/queryAPI/periodosZafra"
 
 const DDJJContainer = ({ tokenAuth, dataUserRegister }) => {
   const [errorServer, setErrorServer] = useState(false)
@@ -61,6 +62,8 @@ const DDJJContainer = ({ tokenAuth, dataUserRegister }) => {
   const [banderaDataNull, setBanderaDataNull] = useState(false)
   const [lastUpdated, setLastUpdated] = useState(undefined)
 
+  const [periodosZafra, setPeriodosZafra] = useState(undefined)
+
   /**
    * Datos para DDJJ Infomres
    */
@@ -82,6 +85,16 @@ const DDJJContainer = ({ tokenAuth, dataUserRegister }) => {
       setErrorServer(dataDDJJ.response.status)
       setMsgErrorServer(dataDDJJ.response.data.error.message)
     }
+  }
+
+  useEffect(() => {
+    getDataPeriodosZafra()
+  },[zafraInformacion])
+
+  const getDataPeriodosZafra = async () => {
+    const params = { anio: zafraInformacion };
+    const data = await getPeriodoZafra(params);
+    setPeriodosZafra(data)
   }
 
   const quincenasOptions = useMemo(() => {
@@ -524,6 +537,7 @@ const DDJJContainer = ({ tokenAuth, dataUserRegister }) => {
             ddjjInformacionParseada={ddjjInformacionParseada}
             estadoDDJJInformacion={estadoDDJJInformacion}
             setDdjjInformacionParseada={setDdjjInformacionParseada}
+            periodosZafra={periodosZafra}
           />
 
           {estadoDDJJInformacion === "Aprobado" && (

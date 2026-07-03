@@ -173,8 +173,7 @@ const ReportesComparativoZafras = ({
       setFechasAnioFinAnhidroIngeniosNorte
     )
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [periodosAnioStart, periodosAnioEnd, dataAnioStartAnhidroTucuman, dataAnioStartDestileriaTucuman, dataAnioStartZafraTucuman, dataAnioEndDestileriaTucuman, dataAnioEndAnhidroTucuman, dataAnioEndZafraTucuman, dataAnioStartZafraNorte, dataAnioEndZafraNorte,dataAnioStartDestileriaNorte, dataAnioEndDestileriaNorte, dataAnioStartAnhidroNorte, dataAnioEndAnhidroNorte])
-
+  }, [periodosAnioStart, periodosAnioEnd, dataAnioStartAnhidroTucuman, dataAnioStartDestileriaTucuman, dataAnioStartZafraTucuman, dataAnioEndDestileriaTucuman, dataAnioEndAnhidroTucuman, dataAnioEndZafraTucuman, dataAnioStartZafraNorte, dataAnioEndZafraNorte, dataAnioStartDestileriaNorte, dataAnioEndDestileriaNorte, dataAnioStartAnhidroNorte, dataAnioEndAnhidroNorte])
   /** FILTRO DE INGENIOS QUE FINALIZARON -- TUCUMAN **/
   useEffect(() => {
     if (fechasAnioFinIngenios && fechasAnioFinIngenios !== null && periodosAnioStart && periodosAnioEnd) {
@@ -291,7 +290,10 @@ const ReportesComparativoZafras = ({
     sanIsidro: { start: sanisidro, end: sanisidroComp },
     seaboard: { start: seaboard, end: seaboardComp },
   };
+  console.log(dataPorIngenio)
 
+  // console.log('2024:', bellavista, bellavistaDestileria)
+  // console.log('2025:', bellavistaComp, bellavistaDestileriaComp)
   /** CONDICION PARA VERIFICAR SI HAY DATOS PARA MOSTRAR **/
   const hayDatosListos =
     anioStart &&
@@ -334,9 +336,6 @@ const ReportesComparativoZafras = ({
     destBellaVista: "bellaVista", // comparar con Bella Vista anterior
   } : {};
 
-
-
-
   if (hayDatosListos) {
     const ingeniosCombinados = [
       ...(ingeniosFinalizados || []),
@@ -355,6 +354,7 @@ const ReportesComparativoZafras = ({
       let itemsMostrar = []
       const itemsData = {};
       const dataIngenio = dataPorIngenio[nombre];
+      // console.log(dataIngenio)
       if (!dataIngenio) return null;
       // 👇 Determinar qué items mostrar según el tipo de finalización
       if (ingeniosFinalizados.includes(nombre) || ingeniosFinalizadosNorte?.includes(nombre)) itemsMostrar.push(...itemsZafra);
@@ -375,7 +375,7 @@ const ReportesComparativoZafras = ({
 
           // Para ítems de alcohol, comparar el ingenio viejo vs el nuevo
           if (["ALCPRODUCIDO", "ALCHIDRATADO", "ANHIDRO"].includes(item)) {
-            valorStart = dataIngenioAnterior?.start?.[`${nombreAnterior}${item}`] ?? 0;
+            valorStart = dataIngenioAnterior?.start?.[`${nombre}${item}`] ?? 0;
             valorEnd = dataIngenio.end?.[`${nombre}${item}`] ?? 0;
           } else {
             // para otros ítems, usar el ingenio normal
@@ -384,18 +384,20 @@ const ReportesComparativoZafras = ({
           }
         } else {
           // caso normal
+          console.log(nombre,item)
+          console.log(dataIngenio.end)
           valorStart = dataIngenio.start?.[`${nombre}${item}`] ?? 0;
           valorEnd = dataIngenio.end?.[`${nombre}${item}`] ?? 0;
         }
         // const valorStart = dataIngenio.start?.[clave] ?? 0;
         // const valorEnd = dataIngenio.end?.[clave] ?? 0;
-
+        // console.log(valorStart, valorEnd)
         itemsData[item] = {
           [anioStart]: valorStart,
           [anioEnd]: valorEnd,
         };
       });
-
+      // console.log(ingenioNombres[nombre] || nombre, itemsData)
       return {
         ingenio: ingenioNombres[nombre] || nombre,
         items: itemsData,
@@ -502,6 +504,7 @@ const ReportesComparativoZafras = ({
       window.location.reload();
     }
   }
+  console.log('data:: ', data)
   return (
     <>
       {!hayDatosListos ? (

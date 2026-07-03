@@ -1,4 +1,12 @@
-import { anhidroLeales2023, anhidroBellaVista2023, anhidroConcepcion2023, anhidroBellaVista2024, anhidroConcepcion2024, anhidroLeales2024 } from "../../../../utils/data/AnhidroSinDeclarar";
+import {
+  anhidroLeales2023,
+  anhidroBellaVista2023,
+  anhidroConcepcion2023,
+  anhidroBellaVista2024,
+  anhidroConcepcion2024,
+  anhidroLeales2024,
+  anhidroBellaVista2025
+} from "../../../../utils/data/AnhidroSinDeclarar";
 
 // Mapeo de items (lo mismo para todos los ingenios)
 const items = [
@@ -335,6 +343,8 @@ let dataAnhidroTucumanEnd = {
   staRosaFinAnhidroEnd: null,
   sanJuanInicioAnhidroEnd: null,
   sanJuanFinAnhidroEnd: null,
+  destBellaVistaInicioAnhidroEnd: null,
+  destBellaVistaFinAnhidroEnd: null
 };
 let dataAnhidroNorte = {
   sanIsidroInicioAnhidro: null,
@@ -497,7 +507,6 @@ export const datosComparativosHook = (
     sanIsidroEnd,
     seaboardEnd
   } = dataEnd
-
 
   /*** FECHA DE INICIO Y FIN DE CADA INGENIOS ***/
   const aguilaresPeriodo = periodosAnioStart?.find(
@@ -934,8 +943,8 @@ export const datosComparativosHook = (
     staRosaFinAnhidroEnd: starosaPeriodoEnd?.fin_anhidro,
     sanJuanInicioAnhidroEnd: sanjuanPeriodoEnd?.inicio_anhidro,
     sanJuanFinAnhidroEnd: sanjuanPeriodoEnd?.fin_anhidro,
-    bellaVistaAnhidroInicioEnd: destBellaVistaPeriodoEnd?.inicio_anhidro,
-    bellaVistaAnhidroFinEnd: destBellaVistaPeriodoEnd?.fin_anhidro,
+    destBellaVistaInicioAnhidroEnd: destBellaVistaPeriodoEnd?.inicio_anhidro,
+    destBellaVistaFinAnhidroEnd: destBellaVistaPeriodoEnd?.fin_anhidro,
   };
 
   /** ANHIDRO - NORTE **/
@@ -1093,6 +1102,7 @@ export const datosComparativosHook = (
       variablesEnd.producido5 += d.alcoholProducido || 0;
       variablesEnd.hidratado5 += d.alcoholHidratado || 0;
       destBellaVistaEnd = {
+        destBellaVistaANHIDRO: variablesEnd.anhidro5 || 0,
         destBellaVistaALCPRODUCIDO: variablesEnd.producido5,
         destBellaVistaALCHIDRATADO: variablesEnd.hidratado5,
         destBellaVistaFinDestileria: true,
@@ -1492,6 +1502,7 @@ export const datosComparativosHook = (
       new Date(d.fechaParte) <= new Date(dataAnhidroTucumanEnd.aguilaresFinDestileria) &&
       new Date(d.fechaParte) >= new Date(dataAnhidroTucumanEnd.aguilaresInicioAnhidroEnd)
     ) {
+      
       variablesEnd.anhidro1 += d.alcoholAnhidro || 0;
       aguilaresEnd = {
         aguilaresANHIDRO: variablesEnd.anhidro1,
@@ -1547,17 +1558,16 @@ export const datosComparativosHook = (
         cruzAltaFinAnhidro: true
       };
     }
-
     if (
       d.ingenioNombre === "Destilería Bella Vista" &&
-      dataAnhidroTucumanEnd.bellaVistaInicioAnhidroEnd &&
-      dataAnhidroTucumanEnd.bellaVistaFinAnhidroEnd &&
+      dataAnhidroTucumanEnd.destBellaVistaInicioAnhidroEnd &&
+      dataAnhidroTucumanEnd.destBellaVistaFinAnhidroEnd &&
       new Date(d.fechaParte) <= new Date(dataAnhidroTucumanEnd.bellaVistaFinAnhidroEnd) &&
-      new Date(d.fechaParte) >= new Date(dataAnhidroTucumanEnd.bellaVistaInicioAnhidroEnd)
+      new Date(d.fechaParte) >= new Date(dataAnhidroTucumanEnd.destBellaVistaInicioAnhidroEnd)
     ) {
       variablesEnd.anhidro5 += d.alcoholAnhidro || 0;
       destBellaVistaEnd = {
-        destBellaVistaANHIDRO: variablesEnd.anhidro5,
+        destBellaVistaANHIDRO: variablesEnd.anhidro5 || 0,
         destBellaVistaALCPRODUCIDO: destBellaVistaEnd.destBellaVistaALCPRODUCIDO,
         destBellaVistaALCHIDRATADO: destBellaVistaEnd.destBellaVistaALCPRODUCIDO,
         destBellaVistaFinAnhidro: true
@@ -1715,7 +1725,6 @@ export const datosComparativosHook = (
     }
   })
   /********* TUCUMAN ANIO COMPARATIVO *********/
-
   dataAnioStartAnhidroTucuman?.forEach((d) => {
     if (
       d.ingenioNombre === "Aguilares" &&
@@ -3041,6 +3050,14 @@ export const datosComparativosHook = (
     concepcionEnd.concepcionANHIDRO = concepcionEnd.concepcionANHIDRO + anhidroConcepcion2024
     bellaVistaEnd.bellaVistaANHIDRO = bellaVistaEnd.bellaVistaANHIDRO + anhidroBellaVista2024
   }
+  if (anioStart === 2025) {
+    // bellaVista.bellaVistaANHIDRO = bellaVista.bellaVistaANHIDRO + anhidroBellaVista2025
+    destBellaVista.destBellaVistaANHIDRO = destBellaVista.destBellaVistaANHIDRO + anhidroBellaVista2025
+  }
+  if (anioEnd === 2025) {
+    // bellaVistaEnd.bellaVistaANHIDRO = bellaVistaEnd.bellaVistaANHIDRO + anhidroBellaVista2025
+    destBellaVistaEnd.destBellaVistaANHIDRO = destBellaVistaEnd.destBellaVistaANHIDRO + anhidroBellaVista2025
+  }
 
   aguilares.aguilaresRCMB = Math.round((Number(aguilares?.aguilaresEQUIVALENTE) / aguilares?.aguilaresCMB) * 100 * 100) / 100
   aguilares.aguilaresRCMN = Math.round((Number(aguilares?.aguilaresEQUIVALENTE) / aguilares?.aguilaresCMN) * 100 * 100) / 100
@@ -3126,6 +3143,7 @@ export const datosComparativosHook = (
 
   staRosaEnd.staRosaRCMB = Math.round((Number(staRosaEnd?.staRosaEQUIVALENTE) / staRosaEnd?.staRosaCMB) * 100 * 100) / 100
   staRosaEnd.staRosaRCMN = Math.round((Number(staRosaEnd?.staRosaEQUIVALENTE) / staRosaEnd?.staRosaCMN) * 100 * 100) / 100
+  
   setAguilares(aguilares)
   setBellavista(bellaVista)
   setBellavistaDestileria(destBellaVista)
@@ -3544,11 +3562,25 @@ export const datosComparativosHook = (
       variablesEnd.equivalente17 += Number(d.azucarEquivalente) || 0;
       variablesEnd.melaza17 += d.melazaProducida || 0;
       variablesEnd.blanco17 += d.azucarBlancoProducido || 0;
-      variablesEnd.refinado17 += d.azucarRefinado || 0;
+      /** PARCHE PARA ZAFRA 2024 y 2025  - AZUCAR REFINADO **/
+      const calculoAntiguoRefinado = anioEnd < 2026
+        ? variablesEnd.refinado17 + (new Date(d.fechaParte) <= new Date(dataZafraNorteEnd.ledesmaFinDatosZafraEnd) && d.azucarRefinado)
+        : variablesEnd.refinado17 + d.azucarRefinado
+      variablesEnd.refinado17 = calculoAntiguoRefinado
+      // variablesEnd.refinado17 += d.azucarRefinado || 0;
+
       variablesEnd.organico17 += d.azucarOrganico || 0;
-      variablesEnd.crudo17 += (d.azucarCrudoProducido <= 0 ? - d.azucarRefinado - d.otroAzucar : d.azucarCrudoProducido - d.azucarRefinado - d.otroAzucar);
+
+      /** PARCHE PARA ZAFRA 2024 y 2025  - AZUCAR CRUDO **/
+      // variablesEnd.crudo17 += (d.azucarCrudoProducido <= 0 ? - d.azucarRefinado - d.otroAzucar : d.azucarCrudoProducido - d.azucarRefinado - d.otroAzucar);
+      const calculoAntiguoCrudo = anioEnd < 2026
+        ? variablesEnd.crudo17 + (new Date(d.fechaParte) <= new Date(dataZafraNorteEnd.ledesmaFinDatosZafraEnd) && d.azucarCrudoProducido - d.azucarRefinado - d.otroAzucar)
+        : variablesEnd.crudo17 + d.azucarCrudoProducido
+
+      variablesEnd.crudo17 = calculoAntiguoCrudo
+
       variablesEnd.otros17 += d.otroAzucar || 0;
-      variablesEnd.fisicoTotal17 += d.azucarCrudo17
+      variablesEnd.fisicoTotal17 += d.azucarCrudoProducido
       ledesmaEnd = {
         ledesmaCMB: variablesEnd.cmb17,
         ledesmaCMN: variablesEnd.cmn17,
@@ -3740,9 +3772,22 @@ export const datosComparativosHook = (
       variables.equivalente17 += Number(d.azucarEquivalente) || 0;
       variables.melaza17 += d.melazaProducida || 0;
       variables.blanco17 += d.azucarBlancoProducido || 0;
-      variables.refinado17 += d.azucarRefinado || 0;
+      /** PARCHE PARA ZAFRA 2024 y 2025  - AZUCAR REFINADO **/
+      const calculoAntiguoRefinado = anioStart < 2026
+        ? variables.refinado17 + (new Date(d.fechaParte) <= new Date(dataZafraNorte.ledesmaFinDatosZafra) && d.azucarRefinado)
+        : variables.refinado17 + d.azucarRefinado
+      variables.refinado17 = calculoAntiguoRefinado
+      // variables.refinado17 += d.azucarRefinado || 0;
+
       variables.organico17 += d.azucarOrganico || 0;
-      variables.crudo17 += (d.azucarCrudoProducido <= 0 ? - d.azucarRefinado - d.otroAzucar : d.azucarCrudoProducido - d.azucarRefinado - d.otroAzucar);
+      /** PARCHE PARA ZAFRA 2024 y 2025  - AZUCAR CRUDO **/
+      // variables.crudo17 += (d.azucarCrudoProducido <= 0 ? - d.azucarRefinado - d.otroAzucar : d.azucarCrudoProducido - d.azucarRefinado - d.otroAzucar);
+      const calculoAntiguoCrudo = anioEnd < 2026
+        ? variables.crudo17 + (new Date(d.fechaParte) <= new Date(dataZafraNorte.ledesmaFinDatosZafra) && d.azucarCrudoProducido - d.azucarRefinado - d.otroAzucar)
+        : variables.crudo17 + d.azucarCrudoProducido
+
+      variables.crudo17 = calculoAntiguoCrudo
+      
       variables.otros17 += d.otroAzucar || 0;
       variables.fisicoTotal17 += d.azucarCrudoProducido
       ledesma = {
