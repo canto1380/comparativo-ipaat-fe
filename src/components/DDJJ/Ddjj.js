@@ -21,8 +21,6 @@ const DdjjComponent = ({
 }) => {
   useEffect(() => {
 
-    const a = ddjjInformacionFilter.filter(d => d.ingenioNombre === "La Trinidad")
-    console.log(a)
     const returnData = datosAcumuladosDDJJHook(
       ddjjInformacionFilter,
       periodosZafra
