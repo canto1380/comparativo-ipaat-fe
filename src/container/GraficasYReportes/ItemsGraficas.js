@@ -47,7 +47,7 @@ export const itemsRportes = (props = {}) => {
         routeAPI,
 
     } = props;
-
+    console.log('dataAnioStartZafraTucuman:: ', dataAnioStartZafraTucuman)
     return [
         {
             key: '1',

@@ -290,7 +290,6 @@ const ReportesComparativoZafras = ({
     sanIsidro: { start: sanisidro, end: sanisidroComp },
     seaboard: { start: seaboard, end: seaboardComp },
   };
-  console.log(dataPorIngenio)
 
   // console.log('2024:', bellavista, bellavistaDestileria)
   // console.log('2025:', bellavistaComp, bellavistaDestileriaComp)
@@ -502,7 +501,6 @@ const ReportesComparativoZafras = ({
       window.location.reload();
     }
   }
-  console.log('datasss:: ', data)
   return (
     <>
       {!hayDatosListos ? (
