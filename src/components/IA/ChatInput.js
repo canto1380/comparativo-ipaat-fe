@@ -51,7 +51,6 @@ const ChatInput = ({ onSend, dataUserRegister }) => {
             message.error("No se pudo acceder al micrófono");
         }
     };
-    console.log(dataUserRegister)
 
     // // 📎 Seleccionar imagen
     // const handleFileChange = (info) => {

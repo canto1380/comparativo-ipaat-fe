@@ -284,7 +284,7 @@ const FormAddEditPeriodos = ({ dataRegisterEdit, aniosData, ingeniosData }) => {
             />
           </Col>
           <Col xs={24} sm={7}>
-            <p className="mb-1">Final de datos</p>
+            <p className="mb-1">Última tara</p>
             <input
               className="p-1 bg-white text-dark border border-1 input-date "
               type="date"

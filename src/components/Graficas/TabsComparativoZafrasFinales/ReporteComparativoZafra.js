@@ -384,8 +384,6 @@ const ReportesComparativoZafras = ({
           }
         } else {
           // caso normal
-          console.log(nombre,item)
-          console.log(dataIngenio.end)
           valorStart = dataIngenio.start?.[`${nombre}${item}`] ?? 0;
           valorEnd = dataIngenio.end?.[`${nombre}${item}`] ?? 0;
         }
@@ -504,7 +502,7 @@ const ReportesComparativoZafras = ({
       window.location.reload();
     }
   }
-  console.log('data:: ', data)
+  console.log('datasss:: ', data)
   return (
     <>
       {!hayDatosListos ? (
