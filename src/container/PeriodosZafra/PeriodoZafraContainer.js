@@ -122,14 +122,14 @@ const PeriodoZafraContainer = ({ tokenAuth, routeAPI }) => {
     },
     {
       key: "fin_zafra",
-      title: "Final fábrica",
+      title: "Fin zafra",
       dataIndex: "fin_zafra",
       sorter: (a, b) => new Date(a.fin_zafra) - new Date(b.fin_zafra),
       render: (date) => (date ? moment(date).format("DD-MM-YYYY") : null),
     },
     {
       key: "fin_datos_zafra",
-      title: "Última tara CMB",
+      title: "Última tara",
       dataIndex: "fin_datos_zafra",
       sorter: (a, b) => new Date(a.fin_datos_zafra) - new Date(b.fin_datos_zafra),
       render: (date) => (date ? moment(date).format("DD-MM-YYYY") : null),

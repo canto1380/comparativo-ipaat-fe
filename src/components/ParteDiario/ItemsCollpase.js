@@ -321,7 +321,6 @@ const ItemsCollapse = ({
   dataParteDiariosHistoricosNorte,
   dateInicioIngeniosItemCollapse,
 }) => {
-  (dataParteDiariosHistoricosNorte)
   // Flatten both possible inputs (agrupados o planos) en una lista plana de partes
   const flatParts = useMemo(() => {
     const a = flattenParts(dataParteDiariosHistoricos || []);

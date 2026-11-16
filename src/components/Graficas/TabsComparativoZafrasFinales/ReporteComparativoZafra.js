@@ -290,7 +290,6 @@ const ReportesComparativoZafras = ({
     sanIsidro: { start: sanisidro, end: sanisidroComp },
     seaboard: { start: seaboard, end: seaboardComp },
   };
-  console.log(dataPorIngenio)
 
   // console.log('2024:', bellavista, bellavistaDestileria)
   // console.log('2025:', bellavistaComp, bellavistaDestileriaComp)
@@ -384,8 +383,6 @@ const ReportesComparativoZafras = ({
           }
         } else {
           // caso normal
-          console.log(nombre,item)
-          console.log(dataIngenio.end)
           valorStart = dataIngenio.start?.[`${nombre}${item}`] ?? 0;
           valorEnd = dataIngenio.end?.[`${nombre}${item}`] ?? 0;
         }
@@ -504,7 +501,6 @@ const ReportesComparativoZafras = ({
       window.location.reload();
     }
   }
-  console.log('data:: ', data)
   return (
     <>
       {!hayDatosListos ? (
