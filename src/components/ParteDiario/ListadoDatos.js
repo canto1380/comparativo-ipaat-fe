@@ -7,6 +7,7 @@ const ListadoDatos = ({ columns, scroll, data }) => {
       <Table
         columns={columns}
         dataSource={data}
+        locale={{ emptyText: "Sin registros" }}
         style={{
           fontSize: 10,
         }}
