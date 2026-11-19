@@ -18,6 +18,7 @@ import TextArea from "antd/es/input/TextArea";
 import { toast } from "react-toastify";
 import '../Botones/botones.css'
 import { getPeriodoZafra } from "../../utils/queryAPI/periodosZafra";
+import PanelRegiones from "./PanelRegiones";
 
 const ParteDiario = ({
   dataEnd,
@@ -759,15 +760,6 @@ const ParteDiario = ({
     setDataDiasAnhidroNorteComparativa(diasAnhidro)
   }
 
-  /*** ESTIMACIONES ***/
-  let estimacionEEAOC;
-  dataComparativa?.forEach((d) => {
-    if (d.anio_zafra === zafraParteDiario) {
-      estimacionEEAOC = d.estimacion_EEAOC;
-    } else {
-      estimacionEEAOC = 0
-    }
-  });
   /** Exportacion ZAFRA ACTUAL **/
   const exportarParteComparativo = async () => {
     try {
@@ -1168,116 +1160,30 @@ const ParteDiario = ({
           <p className="me-4 mb-0">Observaciones:</p>
           <TextArea row={3} disabled={!zafraParteDiario ? true : false} onChange={(e) => setObservaciones(e.target.value)} />
         </Col>
-        <Col xs={12} className="mb-2">
-          <Row className="justify-content-start">
-            <Col className="mb-1 encabezados-panel fw-bolder">
-              Datos hasta: {dataEnd ? moment(dataEnd).format("DD-MM-YYYY") : ""}
-            </Col>
-            <Col className="mb-1 encabezados-panel fw-bolder">
-              Días de zafra: {Math.trunc(dataDiasZafra)}
-            </Col>
-            <Col className="mb-1 encabezados-panel fw-bolder">
-              Días de Destilería: {Math.trunc(dataDiasDestileria)}
-            </Col>
-            <Col className="mb-1 encabezados-panel fw-bolder">
-              Rto CMB(%):{" "}
-              {panelCMB
-                ? ((panelAzucarEquivalente / panelCMB) * 100).toFixed(2)
-                : ""}
-            </Col>
-            <Col className="mb-1 encabezados-panel fw-bolder">
-              Avance de zafra(%):{" "}
-              {(panelCMB && estimacionEEAOC !== 0) ? ((panelCMB / estimacionEEAOC) * 100).toFixed(2) : 0}
-            </Col>
-          </Row>
-        </Col>
-        <Col className="align-items-center col-valores p-2 mx-2">
-          <div>
-            <p className="text-center fw-bolder mb-1 t-panel">
-              Caña molida bruta
-            </p>
-          </div>
-          <div>
-            <p className="text-center mb-1 dato-panel">
-              {panelCMB?.toLocaleString("es-ES")} [tn]
-            </p>
-          </div>
-        </Col>
-        <Col className="align-items-center col-valores p-2 mx-2">
-          <div>
-            <p className="text-center fw-bolder mb-1 t-panel">Azúcar Total</p>
-          </div>
-          <div>
-            <p className="text-center mb-1 dato-panel">
-              {panelAzucar?.toLocaleString("es-ES")} [tn]
-            </p>
-          </div>
-        </Col>
-        <Col className="align-items-center col-valores p-2 mx-2">
-          <div>
-            <p className="text-center fw-bolder mb-1 t-panel">Azúcar Crudo</p>
-          </div>
-          <div>
-            <p className="text-center mb-1 dato-panel">
-              {panelAzucarCrudo?.toLocaleString("es-ES")} [tn]
-            </p>
-          </div>
-        </Col>
-        <Col className="align-items-center col-valores p-2 mx-2">
-          <div>
-            <p className="text-center fw-bolder mb-1 t-panel">
-              Azúcar Blanco A
-            </p>
-          </div>
-          <div>
-            <p className="text-center mb-1 dato-panel">
-              {panelAzucarBlancoA?.toLocaleString("es-ES")} [tn]
-            </p>
-          </div>
-        </Col>
-        <Col className="align-items-center col-valores p-2 mx-2">
-          <div>
-            <p className="text-center fw-bolder mb-1 t-panel">
-              Azúcar Refinado
-            </p>
-          </div>
-          <div>
-            <p className="text-center mb-1 dato-panel">
-              {panelAzucarRefinado?.toLocaleString("es-ES")} [tn]
-            </p>
-          </div>
-        </Col>
-        <Col className="align-items-center col-valores p-2 mx-2">
-          <div>
-            <p className="text-center fw-bolder mb-1 t-panel">
-              Azúcar Orgánico
-            </p>
-          </div>
-          <div>
-            <p className="text-center mb-1 dato-panel">
-              {panelAzucarOrganico?.toLocaleString("es-ES")} [tn]
-            </p>
-          </div>
-        </Col>
-        <Col className="align-items-center col-valores p-2 mx-2">
-          <div>
-            <p className="text-center fw-bolder mb-1 t-panel">Alcohol</p>
-          </div>
-          <div>
-            <p className="text-center mb-1 dato-panel">
-              {panelAlcohol?.toLocaleString("es-ES")} [L]
-            </p>
-          </div>
-        </Col>
-        <Col className="align-items-center col-valores p-2 mx-2">
-          <div>
-            <p className="text-center fw-bolder mb-1 t-panel">Alcohol Anhidro</p>
-          </div>
-          <div>
-            <p className="text-center mb-1 dato-panel">
-              {panelAlcoholAnhidro?.toLocaleString("es-ES")} [L]
-            </p>
-          </div>
+        <Col xs={12}>
+          <PanelRegiones
+            dataEnd={dataEnd}
+            zafraParteDiario={zafraParteDiario}
+            dataComparativa={dataComparativa}
+            dataDiasZafra={dataDiasZafra}
+            dataDiasDestileria={dataDiasDestileria}
+            panelCMB={panelCMB}
+            panelAzucarEquivalente={panelAzucarEquivalente}
+            panelAzucar={panelAzucar}
+            panelAzucarCrudo={panelAzucarCrudo}
+            panelAzucarBlancoA={panelAzucarBlancoA}
+            panelAzucarRefinado={panelAzucarRefinado}
+            panelAzucarOrganico={panelAzucarOrganico}
+            panelAlcohol={panelAlcohol}
+            panelAlcoholAnhidro={panelAlcoholAnhidro}
+            dataDiasZafraNorte={dataDiasZafraNorte}
+            dataDiasDestileriaNorte={dataDiasDestileriaNorte}
+            n1={n1}
+            n2={n2}
+            n3={n3}
+            n4={n4}
+            n5={n5}
+          />
         </Col>
       </Row>
       <Row className="d-flex justify-content-start align-items-center pb-1 px-4">
