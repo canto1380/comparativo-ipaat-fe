@@ -1,5 +1,7 @@
 import { Form, Select, Spin, Button, Row, Col, InputNumber } from "antd";
-import { useEffect, useState, useRef } from "react";
+import { useContext, useEffect, useState, useRef } from "react";
+import { User } from "../../context/UserProvider";
+import { ingenioFijo } from "../../utils/permisos";
 import { api } from "../../utils/api";
 import MsgError from "../Messages/MsgError";
 import moment from "moment";
@@ -25,6 +27,8 @@ const FormAddEditDiasParada = ({
     dataRegisterEdit?.porcentaje_parada 
   );
   const { form } = Form.useForm();
+  const { dataUser } = useContext(User);
+  const idIngenioFijo = ingenioFijo(dataUser);
 
   const inputRef = useRef(null);
   useEffect(() => {
@@ -129,8 +133,11 @@ const FormAddEditDiasParada = ({
     };
     optionsAnios.push(option);
   });
-  let optionsIngenios = [{ value: "", label: "Todos" }];
-  ingeniosData?.forEach((d) => {
+  let optionsIngenios = idIngenioFijo ? [] : [{ value: "", label: "Todos" }];
+  const ingeniosVisibles = idIngenioFijo
+    ? ingeniosData?.filter((d) => Number(d.id) === idIngenioFijo)
+    : ingeniosData;
+  ingeniosVisibles?.forEach((d) => {
     const option = {
       value: d.id,
       label: d.nombre_ingenio,
@@ -162,7 +169,7 @@ const FormAddEditDiasParada = ({
         onFinishFailed={onFinishFailed}
         initialValues={{
           id_anio_zafra: dataRegisterEdit?.anio_zafra,
-          id_nombre_ingenio: dataRegisterEdit?.nombre_ingenio,
+          id_nombre_ingenio: dataRegisterEdit?.nombre_ingenio ?? idIngenioFijo ?? undefined,
           horas_paradas: dataRegisterEdit?.horas_paradas,
           motivo: dataRegisterEdit?.motivo,
         }}
@@ -204,7 +211,7 @@ const FormAddEditDiasParada = ({
                   width: "100%",
                 }}
                 placeholder="Busque o seleccione"
-                disabled={dataRegisterEdit ? true : false}
+                disabled={Boolean(dataRegisterEdit) || Boolean(idIngenioFijo)}
                 optionFilterProp="children"
                 filterOption={(input, option) =>
                   (option?.label ?? "").includes(input)

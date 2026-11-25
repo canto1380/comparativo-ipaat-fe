@@ -18,6 +18,7 @@ import TextArea from "antd/es/input/TextArea";
 import { toast } from "react-toastify";
 import '../Botones/botones.css'
 import { getPeriodoZafra } from "../../utils/queryAPI/periodosZafra";
+import { tienePermiso } from "../../utils/permisos";
 import PanelRegiones from "./PanelRegiones";
 
 const ParteDiario = ({
@@ -1187,6 +1188,7 @@ const ParteDiario = ({
         </Col>
       </Row>
       <Row className="d-flex justify-content-start align-items-center pb-1 px-4">
+        {tienePermiso(dataUser, "parte_diario.exportar") && (
         <Col xs={12} className="text-start mb-5 mt-4">
           <Dropdown menu={menuProps}>
             <Button
@@ -1233,6 +1235,7 @@ const ParteDiario = ({
             </Button>
           </Dropdown>
         </Col>
+        )}
       </Row>
       <Row className="d-flex justify-content-start align-items-center pb-1 px-4">
         <Col>

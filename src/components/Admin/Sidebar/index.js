@@ -4,7 +4,8 @@ import {
   BsFillCaretRightFill,
   BsFillCaretLeftFill,
   BsNewspaper,
-  BsClipboardData
+  BsClipboardData,
+  BsHouseDoor,
 } from 'react-icons/bs'
 import { FaChartBar } from "react-icons/fa";
 import { FaRegCalendarDays } from "react-icons/fa6";
@@ -15,10 +16,14 @@ import { TbBrandDjango } from "react-icons/tb";
 import './Sidebar.css'
 import {
   getDataToken,
+  getRefreshToken,
+  getTokenLS,
 } from '../../../helpers/helpers'
 import { Link, useLocation } from 'react-router-dom'
 import { SidebarContext } from '../../../context/SidebarProvider';
 import { User } from '../../../context/UserProvider';
+import { tienePermiso } from '../../../utils/permisos';
+import { api } from '../../../utils/api';
 
 const Sidebar = ({ inactivo, tokenAuth, dataUser }) => {
   const [initial, setInitial] = useState('')
@@ -42,57 +47,88 @@ const Sidebar = ({ inactivo, tokenAuth, dataUser }) => {
     setNick(data?.nombre)
   }, [dataUser])
 
-  const cerrarSesion = async (e) => {
+  const cerrarSesion = async () => {
+    try {
+      await api('POST', 'signin/logout', { refreshToken: getRefreshToken() }, getTokenLS() || tokenAuth)
+    } catch (error) {
+      logout()
+    }
     logout()
     window.location.href = '/admin/login'
   }
 
   const itemsSideBar = [
+    // {
+    //   title: 'home',
+    //   iconName: <BsHouseDoor className='sizeIcon' />,
+    //   name: 'Inicio',
+    // },
     {
       title: 'parte-diario',
       iconName: <BsNewspaper className='sizeIcon' />,
       name: 'Parte diario',
+      permiso: 'parte_diario.ver',
     },
     {
       title: 'ddjj',
       iconName: <TbBrandDjango className='sizeIcon' />,
       name: 'Declaraciones juradas',
+      permiso: 'ddjj.ver',
     },
     {
       title: 'datos-comparativos',
       iconName: <RiDatabaseLine className='sizeIcon' />,
       name: 'Datos comparativos',
+      permiso: 'datos_comparativos.ver',
     },
     {
       title: 'periodos-zafra',
       iconName: <BsClipboardData className='sizeIcon' />,
       name: 'Periodos Ingenios',
+      permiso: 'periodos.ver',
     },
     {
       title: 'dias-parada',
       iconName: <FaRegCalendarDays className='sizeIcon' />,
       name: 'Días Parada',
+      permiso: 'dias_parada.ver',
     },
     // {
     //   title: 'reportes',
     //   iconName: <BsClipboardData className='sizeIcon' />,
     //   name: 'Reportes',
+    //   permiso: 'reportes.ver',
     // },
     {
       title: 'graficos',
       iconName: <FaChartBar className='sizeIcon' />,
       name: 'Gráficos',
+      permiso: 'graficas.ver',
     },
     {
       title: 'IA',
       iconName: <RiOpenaiFill className='sizeIcon' />,
       name: 'IA',
+      permiso: 'ia.usar',
     },
-    {
-      title: 'perfil',
-      iconName: <BiUserCircle className='sizeIcon' />,
-      name: 'Cuenta',
-    },
+    // {
+    //   title: 'usuarios',
+    //   iconName: <BiUserCircle className='sizeIcon' />,
+    //   name: 'Usuarios',
+    //   permiso: 'admin.usuarios',
+    // },
+    // {
+    //   title: 'roles',
+    //   iconName: <BsClipboardData className='sizeIcon' />,
+    //   name: 'Roles',
+    //   permiso: 'admin.roles',
+    // },
+    // {
+    //   title: 'permisos',
+    //   iconName: <RiDatabaseLine className='sizeIcon' />,
+    //   name: 'Permisos',
+    //   permiso: 'admin.permisos',
+    // },
   ]
 
   return (
@@ -121,6 +157,13 @@ const Sidebar = ({ inactivo, tokenAuth, dataUser }) => {
           <p className={`${inactivo ? `inactivo` : 'mb-0'}`}>
             {nick}
           </p>
+          <Link
+            to="/admin/perfil"
+            className={`${inactivo ? 'inactivo' : 'sidebar-mi-cuenta'}`}
+            title="Mi cuenta"
+          >
+            Mi cuenta
+          </Link>
         </Col>
 
         {inactivo ? (
@@ -155,7 +198,7 @@ const Sidebar = ({ inactivo, tokenAuth, dataUser }) => {
       <ul
         className={`text-decoration-none list-unstyled sidebarList`}
       >
-        {itemsSideBar.map((items, i) => {
+        {itemsSideBar.filter((items) => !items.permiso || tienePermiso(dataUser, items.permiso)).map((items, i) => {
           const isActive = location.pathname.includes(items.title)
           return (
             <Link

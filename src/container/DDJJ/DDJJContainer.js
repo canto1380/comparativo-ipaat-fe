@@ -7,6 +7,7 @@
 
 
 import { useState, useEffect, useMemo } from "react"
+import { tienePermiso } from "../../utils/permisos"
 import { getDDJJ, getDDJJHistorico } from "../../utils/queryAPI/ddjjQuery"
 import MsgError from "../../components/Messages/MsgError"
 import TitlePage from "../../components/TitlePages"
@@ -488,7 +489,7 @@ const DDJJContainer = ({ tokenAuth, dataUserRegister }) => {
       )}
       <TitlePage
         titlePage="Declaraciones juradas"
-        btnOnClick={true}
+        btnOnClick={tienePermiso(dataUserRegister, "ddjj.importar")}
         titleBtnOnClick="Actualizar DDJJ"
         functionOnClick={actualizarDDJJ}
         lastUpdated={lastUpdated}
@@ -540,7 +541,7 @@ const DDJJContainer = ({ tokenAuth, dataUserRegister }) => {
             periodosZafra={periodosZafra}
           />
 
-          {estadoDDJJInformacion === "Aprobado" && (
+          {estadoDDJJInformacion === "Aprobado" && tienePermiso(dataUserRegister, "ddjj.exportar_informe") && (
             <BtnDescargar
               enabled={!!zafraInformacion && !!ddjjInformacionFilter}
               loading={loadingDownloadReport}
@@ -583,13 +584,15 @@ const DDJJContainer = ({ tokenAuth, dataUserRegister }) => {
             />
           )}
 
-          <BtnDescargar
-            enabled={puedeMostrarReporte && ddjjReporteFilter.length > 0}
-            loading={loadingDownloadDynamicReport}
-            processing={!ddjjReporteFilter}
-            onClick={exportarReporteDinamico}
-            text="Descargar reporte"
-          />
+          {tienePermiso(dataUserRegister, "ddjj.exportar_reporte") && (
+            <BtnDescargar
+              enabled={puedeMostrarReporte && ddjjReporteFilter.length > 0}
+              loading={loadingDownloadDynamicReport}
+              processing={!ddjjReporteFilter}
+              onClick={exportarReporteDinamico}
+              text="Descargar reporte"
+            />
+          )}
         </>
       )
 

@@ -20,6 +20,7 @@ import { toast } from "react-toastify";
 import { User } from "../../context/UserProvider";
 import { getDataToken } from "../../helpers/helpers";
 import { apiExportExcel } from "../../utils/apiExportExcel";
+import { tienePermiso } from "../../utils/permisos";
 
 const PeriodoZafraContainer = ({ tokenAuth, routeAPI }) => {
   const [periodosZafra, setPeriodosZafra] = useState(null);
@@ -122,14 +123,14 @@ const PeriodoZafraContainer = ({ tokenAuth, routeAPI }) => {
     },
     {
       key: "fin_zafra",
-      title: "Fin zafra",
+      title: "Fin Fábrica",
       dataIndex: "fin_zafra",
       sorter: (a, b) => new Date(a.fin_zafra) - new Date(b.fin_zafra),
       render: (date) => (date ? moment(date).format("DD-MM-YYYY") : null),
     },
     {
       key: "fin_datos_zafra",
-      title: "Última tara",
+      title: "Fin Molienda",
       dataIndex: "fin_datos_zafra",
       sorter: (a, b) => new Date(a.fin_datos_zafra) - new Date(b.fin_datos_zafra),
       render: (date) => (date ? moment(date).format("DD-MM-YYYY") : null),
@@ -169,10 +170,11 @@ const PeriodoZafraContainer = ({ tokenAuth, routeAPI }) => {
     {
       key: "actions",
       title: "Acciones",
-
+      align: "right",
+      className: "acciones-columna",
       render: (_, record) => {
         return (
-          <Space size="middle">
+          <Space size="small" className="d-flex justify-content-end">
             <Button
               className="bg-secondary btn-edit"
               href={`/admin/periodos-zafra/editar/${record?.id}`}
@@ -241,7 +243,7 @@ const PeriodoZafraContainer = ({ tokenAuth, routeAPI }) => {
   return (
     <Container fluid>
       <TitlePage titlePage={"Periodos de zafra"} />
-      <hr className="mx-3 mt-1" />
+      <hr className="menu-divider" />
       {periodosZafra === null ? (
         <div className="d-flex justify-content-center align-items-center text-center">
           <Spinn type="data" />
@@ -260,19 +262,21 @@ const PeriodoZafraContainer = ({ tokenAuth, routeAPI }) => {
             zafraOpcionTodos={true}
           />
 
-          <BtnDescargar
-            enabled={!!yearZafra && !!periodosZafra}
-            loading={loading}
-            processing={!periodosZafra}
-            onClick={exportarPeriodos}
-            text="Descargar informe"
-          />
+          {tienePermiso(dataUser, "periodos.exportar") && (
+            <BtnDescargar
+              enabled={!!yearZafra && !!periodosZafra}
+              loading={loading}
+              processing={!periodosZafra}
+              onClick={exportarPeriodos}
+              text="Descargar informe"
+            />
+          )}
 
           <ListHeader
             title={"Periodos de Zafra"}
-            btnLink={"/admin/periodos-zafra/nuevo"}
+            btnLink={tienePermiso(dataUser, "periodos.editar") ? "/admin/periodos-zafra/nuevo" : null}
           />
-          <div className="pb-1 pt-3 px-4">
+          <div className="menu-table-wrap">
             <ListadoDatos
               columns={columnsData}
               scroll={100}

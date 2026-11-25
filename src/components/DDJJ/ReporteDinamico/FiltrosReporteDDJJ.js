@@ -1,4 +1,6 @@
+import { useEffect } from "react";
 import { Select, Checkbox, Divider } from "antd";
+import { ingenioFijo } from "../../../utils/permisos";
 import { Col, Row } from "react-bootstrap";
 import "./FiltrosReporteDDJJ.css";
 
@@ -17,6 +19,12 @@ const FiltrosReporteDDJJ = ({
   setItemsReporte,
   itemsReporteValidos
 }) => {
+  const idIngenioFijo = ingenioFijo();
+  useEffect(() => {
+    if (idIngenioFijo && ingenios?.length === 1) {
+      setIngeniosReporte(ingenios);
+    }
+  }, [idIngenioFijo, ingenios, setIngeniosReporte]);
   return (
     <div className="filtros-reporte-container">
       <Row className="g-3">
@@ -48,8 +56,9 @@ const FiltrosReporteDDJJ = ({
               mode="multiple"
               placeholder="Seleccionar ingenios"
               options={ingenios.map(i => ({ label: i, value: i }))}
-              value={ingeniosReporte}
+              value={idIngenioFijo && ingenios?.length === 1 ? ingenios : ingeniosReporte}
               onChange={setIngeniosReporte}
+              disabled={Boolean(idIngenioFijo)}
               className="filtro-select"
             />
           </div>

@@ -5,6 +5,7 @@ import { validaClave } from "../../utils/validations/validation";
 import Cookies from "js-cookie";
 import "./Login.css";
 import { redirectBase } from "../../helpers/redirect";
+import { primeraRutaPermitida } from "../../utils/permisos";
 import loginAPI from "../../utils/authentication/login.js";
 import { User } from "../../context/UserProvider";
 import { toast } from "react-toastify";
@@ -45,7 +46,7 @@ const Login = ({ banderaLogin, setBanderaLogin }) => {
       const res = await loginAPI(values);
 
       if (res.status === 200) {
-        const { token, user } = res.data;
+        const { token, user, refreshToken } = res.data;
         const { id } = user;
         toast.success(`Bienvenido ${values.usuario}`);
         // Cookies
@@ -53,9 +54,9 @@ const Login = ({ banderaLogin, setBanderaLogin }) => {
         Cookies.set(COOKIES.authId, id, { expires: 1 });
 
         // Contexto
-        loginContext(token, user);
+        loginContext(token, user, refreshToken);
         // Redirección
-        redirectBase("admin/parte-diario");
+        redirectBase(primeraRutaPermitida(user).replace(/^\//, ""));
         return;
       }
       if(res.status !== 200) {
@@ -110,7 +111,7 @@ const Login = ({ banderaLogin, setBanderaLogin }) => {
               >
                 <Input
                   prefix={<UserOutlined className="input-icon" />}
-                  placeholder="Ingrese su usuario"
+                  placeholder="Usuario o correo"
                 />
               </Form.Item>
 

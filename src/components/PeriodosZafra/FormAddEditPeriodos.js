@@ -1,5 +1,7 @@
 import { Form, Select, Spin, Button, Row, Col } from "antd";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { User } from "../../context/UserProvider";
+import { ingenioFijo } from "../../utils/permisos";
 import { api } from "../../utils/api";
 import MsgError from "../Messages/MsgError";
 import moment from "moment";
@@ -31,6 +33,8 @@ const FormAddEditPeriodos = ({ dataRegisterEdit, aniosData, ingeniosData }) => {
   const [finAnhidro, setFinAnhidro] = useState(dataRegisterEdit?.fin_anhidro);
 
   const [form] = Form.useForm();
+  const { dataUser } = useContext(User);
+  const idIngenioFijo = ingenioFijo(dataUser);
 
   const handleReset = () => {
     form.resetFields();
@@ -157,8 +161,11 @@ const FormAddEditPeriodos = ({ dataRegisterEdit, aniosData, ingeniosData }) => {
     optionsAnios.push(option);
   });
 
-  let optionsIngenios = [{ value: "", label: "Todos" }];
-  ingeniosData?.forEach((d) => {
+  let optionsIngenios = idIngenioFijo ? [] : [{ value: "", label: "Todos" }];
+  const ingeniosVisibles = idIngenioFijo
+    ? ingeniosData?.filter((d) => Number(d.id) === idIngenioFijo)
+    : ingeniosData;
+  ingeniosVisibles?.forEach((d) => {
     const option = {
       value: d.id,
       label: d.nombre_ingenio,
@@ -215,7 +222,7 @@ const FormAddEditPeriodos = ({ dataRegisterEdit, aniosData, ingeniosData }) => {
         onFinish={handleSubmit}
         initialValues={{
           id_anio_zafra: dataRegisterEdit?.anio_zafra,
-          id_nombre_ingenio: dataRegisterEdit?.nombre_ingenio,
+          id_nombre_ingenio: dataRegisterEdit?.nombre_ingenio ?? idIngenioFijo ?? undefined,
         }}
       >
         <Row>
@@ -254,7 +261,7 @@ const FormAddEditPeriodos = ({ dataRegisterEdit, aniosData, ingeniosData }) => {
                   width: "100%",
                 }}
                 placeholder="Busque o seleccione"
-                disabled={dataRegisterEdit ? true : false}
+                disabled={Boolean(dataRegisterEdit) || Boolean(idIngenioFijo)}
                 optionFilterProp="children"
                 filterOption={(input, option) =>
                   (option?.label ?? "").includes(input)
@@ -275,7 +282,7 @@ const FormAddEditPeriodos = ({ dataRegisterEdit, aniosData, ingeniosData }) => {
             />
           </Col>
           <Col xs={24} sm={7}>
-            <p className="mb-1">Fin zafra</p>
+            <p className="mb-1">Fin fábrica</p>
             <input
               className="p-1 bg-white text-dark border border-1 input-date "
               type="date"
@@ -284,7 +291,7 @@ const FormAddEditPeriodos = ({ dataRegisterEdit, aniosData, ingeniosData }) => {
             />
           </Col>
           <Col xs={24} sm={7}>
-            <p className="mb-1">Última tara</p>
+            <p className="mb-1">Fin molienda</p>
             <input
               className="p-1 bg-white text-dark border border-1 input-date "
               type="date"

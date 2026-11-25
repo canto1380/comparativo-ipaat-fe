@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Container } from "react-bootstrap";
 import TitlePage from "../../components/TitlePages";
 import ParteDiario from "../../components/ParteDiario/ParteDiario";
@@ -18,8 +18,11 @@ import { obtenerPeriodos } from "./hooks/ObtenerPeriodos";
 import { filtrarRegistrosPorPeriodos } from "./hooks/RegistrosPorPeriodo";
 import { getParteDiariosNorte } from "../../utils/queryAPI/ParteDiariosNorte";
 import { procesarTodosLosIngenios } from "../../utils/hooks/procesarIngeniosHooks";
+import { User } from "../../context/UserProvider";
+import { tienePermiso } from "../../utils/permisos";
 
 const ParteDiarioContainer = () => {
+  const { dataUser } = useContext(User);
   const [errorServer, setErrorServer] = useState(false);
   const [msgErrorServer, setMsgErrorServer] = useState("");
   const [dataEnd, setDataEnd] = useState(null);
@@ -101,6 +104,7 @@ const ParteDiarioContainer = () => {
   const getDataNorte = async () => {
     const periodoActualNorte = obtenerPeriodos(dateInicioIngeniosItemCollapse, 2)
     const { dataZafra1, dataDestileria1, dataAnhidro1 } = filtrarRegistrosPorPeriodos(periodoActualNorte, dataParteDiariosNorte, new Date())
+
     const resultado = procesarTodosLosIngenios(
       dateInicioIngeniosItemCollapse,
       dataZafra1,
@@ -114,6 +118,7 @@ const ParteDiarioContainer = () => {
   const getDataTucuman = async () => {
     const periodoActual = obtenerPeriodos(dateInicioIngeniosItemCollapse, 1);
     const { dataZafra1, dataDestileria1, dataAnhidro1 } = filtrarRegistrosPorPeriodos(periodoActual, dataParteDiarios, new Date());
+    
     const resultado = procesarTodosLosIngenios(
       dateInicioIngeniosItemCollapse,
       dataZafra1,
@@ -301,7 +306,7 @@ const ParteDiarioContainer = () => {
 
       <TitlePage
         titlePage="Parte Diario Directorio"
-        btnOnClick={true}
+        btnOnClick={tienePermiso(dataUser, "parte_diario.importar_sur") || tienePermiso(dataUser, "parte_diario.importar_norte")}
         titleBtnOnClick="Actualizar partes diarios"
         functionOnClick={actualizarPartesDiarios}
         lastUpdated={lastUpdated}

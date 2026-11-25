@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useContext, useState, useEffect } from "react";
+import { User } from "../../context/UserProvider";
+import { ingenioFijo } from "../../utils/permisos";
 import { Select, DatePicker, Button, Card, Row, Col, Divider } from "antd";
 import { FilterOutlined, SearchOutlined } from "@ant-design/icons";
 import { getAnios } from "../../utils/queryAPI/anios";
@@ -20,6 +22,8 @@ const FiltrosDinamicos = ({
   const [fechaFin, setFechaFin] = useState(null);
   const [anios, setAnios] = useState([]);
   const [ingenios, setIngenios] = useState([]);
+  const { dataUser } = useContext(User);
+  const idIngenioFijo = ingenioFijo(dataUser);
 
   // Opciones de tipos de reporte
   const tiposReporte = [
@@ -79,7 +83,11 @@ const FiltrosDinamicos = ({
       ]);
       
       setAnios(aniosData.filter(a => a.anio_zafra !== 2013));
-      setIngenios(ingeniosData);
+      const lista = idIngenioFijo
+        ? (ingeniosData || []).filter((ingenio) => Number(ingenio.id) === idIngenioFijo)
+        : ingeniosData;
+      setIngenios(lista);
+      if (idIngenioFijo) setIngeniosSeleccionados([idIngenioFijo]);
     } catch (error) {
       console.error("Error cargando datos iniciales:", error);
     }
@@ -89,7 +97,7 @@ const FiltrosDinamicos = ({
     setTipoReporte(value);
     // Limpiar otros filtros cuando cambia el tipo de reporte
     setParametroFiltro(null);
-    setIngeniosSeleccionados([]);
+    setIngeniosSeleccionados(idIngenioFijo ? [idIngenioFijo] : []);
     setPeriodoZafra(null);
     setFechaInicio(null);
     setFechaFin(null);
@@ -223,15 +231,17 @@ const FiltrosDinamicos = ({
               onChange={handleIngeniosChange}
               showSearch
               optionFilterProp="label"
-              disabled={!tipoReporte}
+              disabled={!tipoReporte || Boolean(idIngenioFijo)}
             >
               {ingenios.map(ingenio => (
-                <Option key={ingenio.id} value={ingenio.id} label={ingenio.nombre}>
-                  {ingenio.nombre}
+                <Option key={ingenio.id} value={ingenio.id} label={ingenio.nombre_ingenio || ingenio.nombre}>
+                  {ingenio.nombre_ingenio || ingenio.nombre}
                 </Option>
               ))}
             </Select>
-            <small className="text-muted">Dejar vacío para incluir todos los ingenios</small>
+            <small className="text-muted">
+              {idIngenioFijo ? "Solo el ingenio de su usuario" : "Dejar vacío para incluir todos los ingenios"}
+            </small>
           </div>
         </Col>
 

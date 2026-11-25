@@ -7,6 +7,7 @@ import { Collapse } from "antd";
 import { CaretRightOutlined } from "@ant-design/icons";
 import { User } from "../../context/UserProvider";
 import { DatosHistoricosZafraExcel } from "../../Excel/DatosHistoricosZafra";
+import { tienePermiso } from "../../utils/permisos";
 
 const DatosMejoresRegistros = ({
   dataZafraInicio,
@@ -298,6 +299,7 @@ const DatosMejoresRegistros = ({
         </Row>
         
       )}
+      {tienePermiso(dataUser, "reportes.exportar") && (
       <Row className="d-flex justify-content-start align-items-center pt-2 px-0">
         <Col xs={12} className="text-start mb-3 mt-2">
           <Button
@@ -342,6 +344,7 @@ const DatosMejoresRegistros = ({
           </Button>
         </Col>
       </Row>
+      )}
     </Container>
   );
 };

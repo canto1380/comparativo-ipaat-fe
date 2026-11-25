@@ -35,6 +35,107 @@ a {
 .containerAdminData {
   overflow-y: scroll;
 }
+
+.menu-divider {
+  margin: 0.35rem 1rem !important;
+}
+
+.menu-table-wrap {
+  padding: 0.25rem 1.5rem 1rem;
+}
+
+.acciones-columna {
+  white-space: nowrap;
+}
+
+.permisos-categoria {
+  margin-bottom: 12px;
+  border: 1px solid #e8e8e8;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.permisos-categoria-titulo {
+  margin: 0;
+  padding: 8px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #262626;
+  background: #fafafa;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.permiso-fila {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 14px;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.permiso-fila:last-child {
+  border-bottom: 0;
+}
+
+.permiso-fila-info {
+  min-width: 0;
+}
+
+.permiso-fila-nombre {
+  display: inline-block;
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  color: #1f1f1f;
+}
+
+.permiso-fila-desc {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: #8c8c8c;
+}
+
+.roles-permisos-modal .ant-collapse {
+  background: transparent;
+  border: 0;
+}
+
+.roles-permisos-modal .ant-collapse-item {
+  margin-bottom: 8px;
+  border: 1px solid #f0f0f0 !important;
+  border-radius: 8px !important;
+  overflow: hidden;
+}
+
+.roles-permisos-modal .ant-collapse-header {
+  padding: 8px 12px !important;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.roles-permisos-modal .ant-collapse-content-box {
+  padding: 8px 12px 12px !important;
+}
+
+.roles-permiso-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 6px 0;
+  border-bottom: 1px solid #fafafa;
+}
+
+.roles-permiso-item:last-child {
+  border-bottom: 0;
+}
+
+.roles-permiso-item .permiso-fila-desc {
+  margin-left: 0;
+}
 .cursorPointer {
   cursor: pointer;
 }

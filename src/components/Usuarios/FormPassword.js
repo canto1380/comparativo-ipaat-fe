@@ -1,6 +1,5 @@
 import { Form, Input, Spin, Button, message } from "antd";
 import { useState } from "react";
-import { Col, Row } from "react-bootstrap";
 import MsgError from "../Messages/MsgError";
 import { api } from "../../utils/api";
 
@@ -10,10 +9,13 @@ const FormPass = ({ tokenAuth, routerAPI, dataRegisterEdit }) => {
   const [serverError, setServerError] = useState(false);
   const [loading, setLoading] = useState(false);
   const [editBand, setEditBand] = useState(false);
+  const [form] = Form.useForm();
+
+  const userId = dataRegisterEdit?.id ?? dataRegisterEdit?.[0]?.id;
 
   const handleSubmit = async (values) => {
     try {
-      updatePass(values);
+      await updatePass(values);
     } catch (error) {
       setServerError(true);
       setTimeout(() => {
@@ -21,20 +23,22 @@ const FormPass = ({ tokenAuth, routerAPI, dataRegisterEdit }) => {
       }, 3000);
     }
   };
+
   const updatePass = async (values) => {
     const res = await api(
       "PATCH",
-      `${routerAPI}/updatePass/${dataRegisterEdit[0]?.id}`,
+      `${routerAPI}/updatePass/${userId}`,
       values,
       tokenAuth
     );
     if (res.status === 200) {
       setLoading(true);
+      message.success("Clave actualizada con éxito");
       setTimeout(() => {
         setLoading(false);
         window.location.href = "/admin/perfil";
-      }, 2500);
-      message.success("Clave actualizada con éxito", 4)
+      }, 1500);
+      return;
     }
     if (res?.response?.status === 400) {
       const msgError = res?.response?.data?.message;
@@ -45,111 +49,92 @@ const FormPass = ({ tokenAuth, routerAPI, dataRegisterEdit }) => {
       }, 3000);
     }
   };
-  const onFinishFailed = (errorInfo) => {
+
+  const cancelarEdicion = () => {
+    form.resetFields();
+    setEditBand(false);
   };
+
   return (
-    <div className="menuContainer">
-      <Row className={`d-flex justify-content-between align-items-center pb-2`}>
-        <Col xs={6} md={8} className={``}>
-          <div className={`pb-1`}>
-            <h3 className="mb-0">Clave</h3>
-          </div>
-        </Col>
-        <Col xs={6} md={4} className={`text-end`}>
-          <div className={`pb-1`}>
-            <Button
-              type="primary"
-              className={`${editBand && "bg-secondary text-white"}`}
-              onClick={() => setEditBand(!editBand)}
-            >
-              {" "}
-              {editBand ? "Volver" : "Editar Clave"}
-            </Button>
-          </div>
-        </Col>
-      </Row>
-      <Form
-        labelCol={{
-          span: 22,
-        }}
-        wrapperCol={{
-          span: 20,
-        }}
-        layout="vertical"
-        style={{
-          marginLeft: "2vh",
-        }}
-        size={"small"}
-        onFinish={handleSubmit}
-        onFinishFailed={onFinishFailed}
-        disabled={!editBand && true}
-      >
-        <Row>
-          <Col xs={12} sm={6}>
-            <Form.Item
-              label="Ingrese clave actual"
-              name="claveActual"
-              className="mb-3 w-100"
-              rules={[{ required: true, message: "Debe ingresar un clave" }]}
-            >
-              <Input type="password" />
-            </Form.Item>
-          </Col>
-        </Row>
-        <Row>
-          <Col xs={12} md={6}>
-            <Form.Item
-              label="Ingrese una clave"
-              name="claveNueva"
-              className="mb-3"
-              rules={[{ required: true, message: "Debe ingresar un clave" }]}
-            >
-              <Input type="password" />
-            </Form.Item>
-          </Col>
-          <Col xs={12} md={6}>
-            <Form.Item
-              label="Repita la clave"
-              name="claveNueva1"
-              className="mb-3"
-              rules={[{ required: true, message: "Debe coincidir" }]}
-            >
-              <Input type="password" />
-            </Form.Item>
-          </Col>
-        </Row>
-
-        <Form.Item
-          className="text-end"
-          labelCol={{ span: 1 }}
-          wrapperCol={{ span: 22 }}
+    <div className="perfil-card">
+      <div className="perfil-card-header">
+        <div>
+          <h3 className="perfil-card-title">Seguridad</h3>
+          <p className="perfil-card-subtitle">Actualizá tu clave de acceso</p>
+        </div>
+        <Button
+          type={editBand ? "default" : "primary"}
+          onClick={() => (editBand ? cancelarEdicion() : setEditBand(true))}
         >
-          {loading ? (
-            <Button disabled type="primary" htmlType="submit">
-              <Spin
-                as="span"
-                animation="border"
-                size="sm"
-                role="status"
-                aria-hidden="true"
-              />
-              <span className="ms-2">{"Actualizando"}</span>
-            </Button>
-          ) : (
-            <Button type="primary" htmlType="submit">
-              {"Actualizar"}
-            </Button>
-          )}
-        </Form.Item>
-
-        {dataError
-          && (
-            <MsgError text1={"Error"} text2={messageError} />
-          )
-        }
-        {serverError ? <MsgError text2="Server internal Error" /> : null}
-      </Form>
+          {editBand ? "Cancelar" : "Cambiar clave"}
+        </Button>
+      </div>
+      <div className="perfil-card-body">
+        {!editBand ? (
+          <p className="mb-0" style={{ color: "#8c8c8c", fontSize: 13 }}>
+            Por seguridad, la clave actual no se muestra. Usá “Cambiar clave” para actualizarla.
+          </p>
+        ) : (
+          <Form
+            form={form}
+            layout="vertical"
+            size="middle"
+            onFinish={handleSubmit}
+          >
+            <Form.Item
+              label="Clave actual"
+              name="claveActual"
+              rules={[{ required: true, message: "Debe ingresar la clave actual" }]}
+            >
+              <Input.Password placeholder="Clave actual" />
+            </Form.Item>
+            <Form.Item
+              label="Nueva clave"
+              name="claveNueva"
+              rules={[
+                { required: true, message: "Debe ingresar una clave nueva" },
+                { min: 6, message: "Mínimo 6 caracteres" },
+              ]}
+            >
+              <Input.Password placeholder="Nueva clave" />
+            </Form.Item>
+            <Form.Item
+              label="Repetir nueva clave"
+              name="claveNueva1"
+              dependencies={["claveNueva"]}
+              rules={[
+                { required: true, message: "Debe repetir la clave" },
+                ({ getFieldValue }) => ({
+                  validator(_, value) {
+                    if (!value || getFieldValue("claveNueva") === value) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(new Error("Las claves no coinciden"));
+                  },
+                }),
+              ]}
+            >
+              <Input.Password placeholder="Repetir nueva clave" />
+            </Form.Item>
+            <div className="perfil-card-actions">
+              {loading ? (
+                <Button disabled type="primary" htmlType="submit">
+                  <Spin size="small" />
+                  <span className="ms-2">Guardando</span>
+                </Button>
+              ) : (
+                <Button type="primary" htmlType="submit">
+                  Guardar clave
+                </Button>
+              )}
+            </div>
+            {dataError ? <MsgError text1="Error" text2={messageError} /> : null}
+            {serverError ? <MsgError text2="Error interno del servidor" /> : null}
+          </Form>
+        )}
+      </div>
     </div>
   );
 };
+
 export default FormPass;

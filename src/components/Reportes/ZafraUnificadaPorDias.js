@@ -2,6 +2,7 @@ import React, { useContext, useState } from "react";
 import { Button, Col, Container, Row, Spinner } from "react-bootstrap";
 import { DatosHistoricosZafraExcel } from "../../Excel/DatosHistoricosZafra";
 import { User } from "../../context/UserProvider";
+import { tienePermiso } from "../../utils/permisos";
 
 const ZafraUnificadaPorDias = ({
   dataZafraInicio,
@@ -26,6 +27,7 @@ const ZafraUnificadaPorDias = ({
         <span className="text-legend">No hay vista previa debido a la cantidad de registros.</span>
       </p>
 
+      {tienePermiso(dataUser, "reportes.exportar") && (
       <Row className="d-flex justify-content-start align-items-center pt-2 px-0">
         <Col xs={12} className="text-start mb-3 mt-2">
           <Button
@@ -70,6 +72,7 @@ const ZafraUnificadaPorDias = ({
           </Button>
         </Col>
       </Row>
+      )}
     </Container>
   );
 };

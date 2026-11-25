@@ -12,19 +12,18 @@ const TitlePage = ({
   type
 }) => {
   return (
-    <Row className="d-flex justify-content-between align-items-center ">
-      <Col xs={btnOnClick ? 12 : 8} sm={8} className="mt-3 ">
-        <div className={`pt-4 pb-1 px-4`}>
-          <h3>{titlePage}</h3>
+    <Row className="d-flex justify-content-between align-items-center page-title-row">
+      <Col xs={btnOnClick ? 12 : 8} sm={8} className="mt-2">
+        <div className="pt-2 pb-0 px-4">
+          <h3 className="mb-0">{titlePage}</h3>
         </div>
       </Col>
       {btnBack && (
-        <Col xs={4} className="mt-3 ">
-          <div className={`pt-4 pb-1 px-4 text-end`}>
+        <Col xs={4} className="mt-2">
+          <div className="pt-2 pb-0 px-4 text-end">
             <Button
               type="secondary"
               style={{ background: "rgb(64, 64, 64)", color: "white" }}
-              
               href={`${btnLink}`}
             >
               Volver
@@ -33,19 +32,18 @@ const TitlePage = ({
         </Col>
       )}
       {btnOnClick && (
-        <Col xs={12} md={4} className="mt-3 container-button-update">
-          <div className={`pt-4 pb-1 px-2 text-end button-update`}>
+        <Col xs={12} md={4} className="mt-2 container-button-update">
+          <div className="pt-2 pb-0 px-2 text-end button-update">
             <Button
               type="secondary"
-              // style={{ background: "rgb(64, 64, 64)", color: "white" }}
               className="btn-actualizar"
               onClick={functionOnClick}
             >
               {titleBtnOnClick}
             </Button>
           </div>
-          <div className={`ps-4 pe-3 text-end info-update`}>
-            <p className={`mb-1`}>{type === 'parteDiario' ? 'Última actualización: ' : 'DDJJ hasta: '}{lastUpdated}</p>
+          <div className="ps-4 pe-3 text-end info-update">
+            <p className="mb-0">{type === 'parteDiario' ? 'Última actualización: ' : 'DDJJ hasta: '}{lastUpdated}</p>
           </div>
         </Col>
       )}

@@ -51,11 +51,12 @@ const Perfil = () => {
     inactivityTime(setModalUnauthorized)
   }, []);
   useEffect(() => {
+    if (!id || !tokenAuth) return
     getDataUser()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[id])
+  }, [id, tokenAuth])
 
-  const getDataUser = async() => {
+  const getDataUser = async () => {
     const data = await getUsuariosById(id, tokenAuth)
     setUserData(data)
   }
@@ -68,7 +69,7 @@ const Perfil = () => {
           </div>
       ): (
         <>
-        <Title title={"Perfil"}/>
+        <Title title={"Mi cuenta"}/>
         <Container fluid className={`containerAdmin p-0 d-flex justify-content-end`}>
           <Sidebar 
           inactivo={sidebarStatus}

@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
+import { forwardRef, useContext, useEffect, useImperativeHandle, useRef, useState } from "react";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -17,6 +17,8 @@ import moment from "moment";
 import { toast } from "react-toastify";
 import { apiExportExcel } from "../../../utils/apiExportExcel";
 import { message } from "antd";
+import { User } from "../../../context/UserProvider";
+import { tienePermiso } from "../../../utils/permisos";
 
 ChartJS.register(
   CategoryScale,
@@ -45,6 +47,7 @@ const GraficaLinealComponent = forwardRef(({
 }, ref) => {
   const chartRef = useRef(null);
   const [checked, setChecked] = useState(false);
+  const { dataUser } = useContext(User);
 
   useEffect(() => {
 
@@ -142,7 +145,9 @@ const GraficaLinealComponent = forwardRef(({
         >
           <Dropdown.Toggle variant="dark" size="sm">⋮</Dropdown.Toggle>
           <Dropdown.Menu className='dropdown-export'>
+            {tienePermiso(dataUser, "graficas.exportar_grafica") && (
             <Dropdown.Item onClick={exportExcel}>📊 Exportar Excel</Dropdown.Item>
+            )}
             <Dropdown.Item onClick={exportImagen}>🖼️ Exportar Imagen</Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
