@@ -111,24 +111,24 @@ const Sidebar = ({ inactivo, tokenAuth, dataUser }) => {
       name: 'IA',
       permiso: 'ia.usar',
     },
-    // {
-    //   title: 'usuarios',
-    //   iconName: <BiUserCircle className='sizeIcon' />,
-    //   name: 'Usuarios',
-    //   permiso: 'admin.usuarios',
-    // },
-    // {
-    //   title: 'roles',
-    //   iconName: <BsClipboardData className='sizeIcon' />,
-    //   name: 'Roles',
-    //   permiso: 'admin.roles',
-    // },
-    // {
-    //   title: 'permisos',
-    //   iconName: <RiDatabaseLine className='sizeIcon' />,
-    //   name: 'Permisos',
-    //   permiso: 'admin.permisos',
-    // },
+    {
+      title: 'usuarios',
+      iconName: <BiUserCircle className='sizeIcon' />,
+      name: 'Usuarios',
+      permiso: 'admin.usuarios',
+    },
+    {
+      title: 'roles',
+      iconName: <BsClipboardData className='sizeIcon' />,
+      name: 'Roles',
+      permiso: 'admin.roles',
+    },
+    {
+      title: 'permisos',
+      iconName: <RiDatabaseLine className='sizeIcon' />,
+      name: 'Permisos',
+      permiso: 'admin.permisos',
+    },
   ]
 
   return (
