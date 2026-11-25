@@ -1,34 +1,24 @@
-import axios from "axios";
-const url =  process.env.REACT_APP_API ? process.env.REACT_APP_API : process.env.REACT_APP_PRODUCTION
+import { solicitar } from "./sesion";
+import { getTokenLS } from "../helpers/helpers";
+
+const url = process.env.REACT_APP_API ? process.env.REACT_APP_API : process.env.REACT_APP_PRODUCTION;
+const cabecera = (token) => ({ authorization: `${token || getTokenLS() || ""}` });
+
 export const api = async (method, endpoint, data, token) => {
-  try {
-    const res = await axios({
-      data,
-      headers: {
-        authorization: `${token}`,
-      },
-      method,
-      url: `${url}/${endpoint}`,
-    });
-    return res
-  } catch (error) {
-    return error
-  }
+  return solicitar({
+    data,
+    headers: cabecera(token),
+    method,
+    url: `${url}/${endpoint}`,
+  });
 };
 
 export const apiParams = async (method, params, endpoint, data, token) => {
-  try {
-    const res = await axios({
-      data,
-      params,
-      headers: {
-        authorization: `${token}`,
-      },
-      method,
-      url: `${url}/${endpoint}`,
-    });
-    return res
-  } catch (error) {
-    return error
-  }
+  return solicitar({
+    data,
+    params,
+    headers: cabecera(token),
+    method,
+    url: `${url}/${endpoint}`,
+  });
 };

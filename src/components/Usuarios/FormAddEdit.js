@@ -1,6 +1,5 @@
-import { Form, Input, Spin, Button } from "antd";
+import { Form, Input, Spin, Button, message } from "antd";
 import { useState } from "react";
-import { Col, Row } from "react-bootstrap";
 import MsgError from "../Messages/MsgError";
 import { api } from "../../utils/api";
 
@@ -10,10 +9,11 @@ const FormAddEditUsuarios = ({ tokenAuth, routerAPI, dataRegisterEdit }) => {
   const [serverError, setServerError] = useState(false);
   const [loading, setLoading] = useState(false);
   const [editBand, setEditBand] = useState(false);
+  const [form] = Form.useForm();
 
   const handleSubmit = async (values) => {
     try {
-      updateUser(values);
+      await updateUser(values);
     } catch (error) {
       setServerError(true);
       setTimeout(() => {
@@ -21,6 +21,7 @@ const FormAddEditUsuarios = ({ tokenAuth, routerAPI, dataRegisterEdit }) => {
       }, 3000);
     }
   };
+
   const updateUser = async (values) => {
     const res = await api(
       "PATCH",
@@ -28,122 +29,109 @@ const FormAddEditUsuarios = ({ tokenAuth, routerAPI, dataRegisterEdit }) => {
       values,
       tokenAuth
     );
-    if(res.status === 200) {
-      setLoading(true)
-        setTimeout(() => {
-          setLoading(false)
-          window.location.href = "/admin/perfil"
-        }, 2500);
+    if (res.status === 200) {
+      setLoading(true);
+      message.success("Datos actualizados");
+      setTimeout(() => {
+        setLoading(false);
+        window.location.href = "/admin/perfil";
+      }, 1500);
+      return;
     }
-    if(res?.response?.status === 400) {
+    if (res?.response?.status === 400) {
       const arraysError = res?.response?.data?.errors;
-      setMessageError(arraysError);
+      setMessageError(arraysError || []);
       setDataError(true);
       setTimeout(() => {
         setDataError(false);
       }, 3000);
     }
   };
-  const onFinishFailed = (errorInfo) => {
+
+  const cancelarEdicion = () => {
+    form.setFieldsValue({
+      nombre: dataRegisterEdit?.nombre,
+      apellido: dataRegisterEdit?.apellido,
+      email: dataRegisterEdit?.email,
+    });
+    setEditBand(false);
   };
+
   return (
-    <div className="menuContainer">
-      <Row className={`d-flex justify-content-between align-items-center pb-2`}>
-        <Col xs={6} className={``}>
-          <div className={`pb-1`}>
-            <h3 className="mb-0">Informacion Personal</h3>
-          </div>
-        </Col>
-        <Col xs={6} md={4} className={`text-end`}>
-          <div className={`pb-1`}>
-            <Button
-              type="primary"
-              className={`${editBand && "bg-secondary text-white"}`}
-              onClick={() => setEditBand(!editBand)}
-            >
-              {" "}
-              {editBand ? "Volver" : "Editar Datos"}
-            </Button>
-          </div>
-        </Col>
-      </Row>
-      <Form
-        labelCol={{
-          span: 22,
-        }}
-        wrapperCol={{
-          span: 22,
-        }}
-        layout="vertical"
-
-        style={{
-          marginLeft: "2vh",
-        }}
-        size={'small'}
-        onFinish={handleSubmit}
-        onFinishFailed={onFinishFailed}
-        initialValues={{
-          nombre: dataRegisterEdit?.nombre,
-          apellido: dataRegisterEdit?.apellido,
-          email: dataRegisterEdit?.email,
-        }}
-        disabled={!editBand && true}
-      >
-        <Form.Item
-          label="Nombre"
-          name="nombre"
-          className="mb-3"
-          rules={[{ required: true, message: "Debe ingresar un nombre" }]}
+    <div className="perfil-card">
+      <div className="perfil-card-header">
+        <div>
+          <h3 className="perfil-card-title">Datos personales</h3>
+          <p className="perfil-card-subtitle">Nombre, apellido y correo de contacto</p>
+        </div>
+        <Button
+          type={editBand ? "default" : "primary"}
+          onClick={() => (editBand ? cancelarEdicion() : setEditBand(true))}
         >
-          <Input type="text" />
-        </Form.Item>
-        <Form.Item
-          label="Apellido"
-          name="apellido"
-          className="mb-3"
-          rules={[{ required: true, message: "Debe ingresar un apellido" }]}
+          {editBand ? "Cancelar" : "Editar"}
+        </Button>
+      </div>
+      <div className="perfil-card-body">
+        <Form
+          form={form}
+          layout="vertical"
+          size="middle"
+          onFinish={handleSubmit}
+          initialValues={{
+            nombre: dataRegisterEdit?.nombre,
+            apellido: dataRegisterEdit?.apellido,
+            email: dataRegisterEdit?.email,
+          }}
+          disabled={!editBand}
         >
-          <Input type="text" />
-        </Form.Item>
-        <Form.Item
-          label="Email"
-          name="email"
-          className="mb-3"
-          rules={[{ required: true, message: "Debe ingresar un email" }]}
-        >
-          <Input type="text" />
-        </Form.Item>
-        <Form.Item
-          className="text-end"
-          labelCol={{ span: 1 }}
-          wrapperCol={{ span: 22 }}
-        >
-          {loading ? (
-            <Button disabled type="primary" htmlType="submit">
-              <Spin
-                as="span"
-                animation="border"
-                size="sm"
-                role="status"
-                aria-hidden="true"
-              />
-              <span className="ms-2">{"Actualizando"}</span>
-            </Button>
-          ) : (
-            <Button type="primary" htmlType="submit">
-              {"Actualizar"}
-            </Button>
+          <Form.Item
+            label="Nombre"
+            name="nombre"
+            rules={[{ required: true, message: "Debe ingresar un nombre" }]}
+          >
+            <Input placeholder="Nombre" />
+          </Form.Item>
+          <Form.Item
+            label="Apellido"
+            name="apellido"
+            rules={[{ required: true, message: "Debe ingresar un apellido" }]}
+          >
+            <Input placeholder="Apellido" />
+          </Form.Item>
+          <Form.Item
+            label="Email"
+            name="email"
+            rules={[
+              { required: true, message: "Debe ingresar un email" },
+              { type: "email", message: "Ingrese un email válido" },
+            ]}
+          >
+            <Input placeholder="correo@ejemplo.com" />
+          </Form.Item>
+          {editBand && (
+            <div className="perfil-card-actions">
+              {loading ? (
+                <Button disabled type="primary" htmlType="submit">
+                  <Spin size="small" />
+                  <span className="ms-2">Guardando</span>
+                </Button>
+              ) : (
+                <Button type="primary" htmlType="submit">
+                  Guardar cambios
+                </Button>
+              )}
+            </div>
           )}
-        </Form.Item>
-
-        {dataError
-          ? messageError.map((e, i) => (
-              <MsgError key={i} text1={""} text2={e.msg} />
-            ))
-          : null}
-        {serverError ? <MsgError text2="Server internal Error" /> : null}
-      </Form>
+          {dataError
+            ? (Array.isArray(messageError) ? messageError : []).map((e, i) => (
+                <MsgError key={i} text1={""} text2={e.msg} />
+              ))
+            : null}
+          {serverError ? <MsgError text2="Error interno del servidor" /> : null}
+        </Form>
+      </div>
     </div>
   );
 };
+
 export default FormAddEditUsuarios;

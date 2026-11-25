@@ -1,0 +1,130 @@
+.perfil-page {
+  padding-bottom: 1.5rem;
+}
+
+.perfil-resumen {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 0 1.5rem 1rem;
+  padding: 16px 18px;
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 10px;
+}
+
+.perfil-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #1e1e2f;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 18px;
+  letter-spacing: 0.04em;
+  flex-shrink: 0;
+}
+
+.perfil-resumen-info {
+  min-width: 0;
+}
+
+.perfil-resumen-nombre {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f1f1f;
+  line-height: 1.2;
+}
+
+.perfil-resumen-meta {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: #8c8c8c;
+}
+
+.perfil-resumen-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.perfil-grid {
+  padding: 0 1.5rem;
+}
+
+.perfil-card {
+  height: 100%;
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.perfil-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid #f0f0f0;
+  background: #fafafa;
+}
+
+.perfil-card-title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #262626;
+}
+
+.perfil-card-subtitle {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: #8c8c8c;
+  font-weight: 400;
+}
+
+.perfil-card-body {
+  padding: 16px;
+}
+
+.perfil-card .ant-form-item {
+  margin-bottom: 14px;
+}
+
+.perfil-card .ant-form-item-label > label {
+  font-size: 12px;
+  color: #595959;
+}
+
+.perfil-card-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 4px;
+  padding-top: 8px;
+}
+
+@media (max-width: 767px) {
+  .perfil-resumen,
+  .perfil-grid {
+    margin-left: 1rem;
+    margin-right: 1rem;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .perfil-resumen {
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+
+  .perfil-grid {
+    padding: 0 1rem;
+  }
+}

@@ -4,6 +4,7 @@ import { datosComparativosHook } from "./hooks/DatosComparativosHook"
 import { Button, message, Table } from "antd";
 import { columnsTable } from "./ColumnsComparativoZafras";
 import { apiExportExcel } from "../../../utils/apiExportExcel";
+import { tienePermiso } from "../../../utils/permisos";
 import moment from 'moment';
 
 const ReportesComparativoZafras = ({
@@ -507,7 +508,7 @@ const ReportesComparativoZafras = ({
         <div className="px-4 py-2"><span className='text-dark fw-bolder text-legend'>Selecciona un período y al menos un ítem para ver los resultados..</span></div>
       ) : (
         <Container fluid>
-          {hayDatosListos && (
+          {hayDatosListos && tienePermiso(dataUserRegister, "graficas.exportar_comparativo") && (
             <div className="text-end my-3">
               <Button variant="success" onClick={exportarComparativoZafra}>
                 📦 Exportar comparativo

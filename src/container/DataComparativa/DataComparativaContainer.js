@@ -1,6 +1,6 @@
 import { Container } from "react-bootstrap";
 import TitlePage from "../../components/TitlePages";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Spinn from "../../components/Spinner";
 import Filtros from "../../components/Filtros";
 import ListHeader from "../../components/ListHeader";
@@ -14,8 +14,11 @@ import {
   RollbackOutlined,
 } from "@ant-design/icons";
 import Unauthorized from "../../components/Unauthorized";
+import { User } from "../../context/UserProvider";
+import { tienePermiso } from "../../utils/permisos";
 
 const DataComparativaContainer = ({ tokenAuth, routeAPI }) => {
+  const { dataUser } = useContext(User);
   const [dataComparativa, setDataComparativa] = useState(null);
   const [dataZafra, setDataZafra] = useState(null);
   const [search, setSearch] = useState(null);
@@ -106,9 +109,11 @@ const DataComparativaContainer = ({ tokenAuth, routeAPI }) => {
     {
       key: "actions",
       title: "Acciones",
+      align: "right",
+      className: "acciones-columna",
       render: (_, record) => {
         return (
-          <Space size="middle">
+          <Space size="small" className="d-flex justify-content-end">
             <Button
               className="bg-secondary btn-edit"
               key={record?._id}
@@ -140,7 +145,7 @@ const DataComparativaContainer = ({ tokenAuth, routeAPI }) => {
   return (
     <Container fluid>
       <TitlePage titlePage="Datos comparativos" />
-      <hr className="mx-3 mt-1" />
+      <hr className="menu-divider" />
       {dataComparativa === null ? (
         <div className="d-flex justify-content-center align-items-center text-center">
           <Spinn type="data" />
@@ -158,9 +163,9 @@ const DataComparativaContainer = ({ tokenAuth, routeAPI }) => {
           />
           <ListHeader
             title={"Datos comparativos"}
-            btnLink={"/admin/datos-comparativos/nuevo"}
+            btnLink={tienePermiso(dataUser, "datos_comparativos.editar") ? "/admin/datos-comparativos/nuevo" : null}
           />
-          <div className="pb-1 pt-3 px-4">
+          <div className="menu-table-wrap">
             <ListadoDatos
               columns={columnsData}
               scroll={30}

@@ -10,12 +10,14 @@ import {
 } from 'chart.js';
 import { Col, Container, Row } from 'react-bootstrap';
 import '../graficas.css'
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useContext } from 'react';
 import { toast } from 'react-toastify';
 import GraficaLinealComponent from './GraficaLinealComponent';
 import moment from 'moment';
 import { apiExportExcel } from '../../../utils/apiExportExcel';
 import { Button, message } from 'antd';
+import { User } from '../../../context/UserProvider';
+import { tienePermiso } from '../../../utils/permisos';
 
 ChartJS.register(
     CategoryScale,
@@ -47,6 +49,7 @@ const GraficasLinealComponent = ({
 }) => {
     const graficasRefs = useRef([]); // guardamos refs a los componentes hijos
     const [graficasSeleccionadas, setGraficasSeleccionadas] = useState([]);
+    const { dataUser } = useContext(User);
 
     const regionId = !region || region === 'Todos'
         ? 'Todos'
@@ -316,7 +319,7 @@ const GraficasLinealComponent = ({
                 <div className="px-3 py-2">No hay datos para mostrar con los filtros actuales.</div>
             ) : (
                 <Container fluid>
-                    {graficasSeleccionadas.length > 1 && (
+                    {graficasSeleccionadas.length > 1 && tienePermiso(dataUser, "graficas.exportar_seleccionadas") && (
                         <div className="text-end my-3">
                             <Button variant="success" onClick={exportarGraficasSeleccionadas}>
                                 📦 Exportar {graficasSeleccionadas.length} gráficas seleccionadas

@@ -1,0 +1,63 @@
+.home-page {
+  padding-bottom: 1.5rem;
+}
+
+.home-resumen {
+  margin: 0 1.5rem 1rem;
+  padding: 16px 18px;
+  background: #fff;
+  border: 1px solid #e8e8e8;
+  border-radius: 10px;
+}
+
+.home-saludo {
+  font-size: 22px;
+  font-weight: 600;
+  color: #011a4b;
+}
+
+.home-meta {
+  font-size: 13px;
+  color: #8c8c8c;
+}
+
+.home-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.home-section {
+  margin: 0 1.5rem 1rem;
+}
+
+.home-section-title {
+  margin: 0 0 12px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #262626;
+}
+
+.home-section .col-valores {
+  min-width: 140px;
+  margin-bottom: 0.5rem;
+}
+
+.home-panel-card {
+  border-radius: 10px;
+  height: 100%;
+}
+
+.home-hint {
+  margin: 0 0 12px;
+  font-size: 12px;
+  color: #8c8c8c;
+}
+
+@media (max-width: 767px) {
+  .home-resumen,
+  .home-section {
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+}

@@ -1,3 +1,11 @@
+.page-title-row {
+  margin-bottom: 0;
+}
+
+.page-title-row h3 {
+  line-height: 1.2;
+}
+
 .btn-actualizar {
     background: linear-gradient(135deg, #236236, #46b19f);
     color: #fff;

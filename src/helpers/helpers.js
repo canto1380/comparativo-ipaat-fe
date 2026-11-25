@@ -13,6 +13,16 @@ export const getDataToken = () => {
 export const setToken = (token) => {
   return localStorage.setItem('jwt-security-ipaat-2.0', JSON.stringify(token))
 }
+export const setRefreshToken = (token) => {
+  return localStorage.setItem('refresh-security-ipaat-2.0', JSON.stringify(token))
+}
+export const getRefreshToken = () => {
+  let tok = localStorage.getItem('refresh-security-ipaat-2.0')
+  if (tok !== null) {
+    tok = tok.replace(/['"]+/g, '')
+    return tok
+  }
+}
 export const getTokenLS = () => {
   let tok = localStorage.getItem('jwt-security-ipaat-2.0')
   if (tok !== null) {
@@ -29,6 +39,7 @@ export const getToken = (ctx) => {
 
 export const deleteToken = () => {
   localStorage.removeItem('data-security-ipaat-2.0')
+  localStorage.removeItem('refresh-security-ipaat-2.0')
   return localStorage.removeItem('jwt-security-ipaat-2.0')
 }
 

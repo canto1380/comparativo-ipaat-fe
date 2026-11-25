@@ -7,7 +7,7 @@ function getRangoFechas(ingenio, tipo) {
     case "zafra":
       return {
         inicio: toDate(ingenio.inicio_zafra),
-        fin: toDate(ingenio.fin_datos_zafra),
+        fin: toDate(ingenio.fin_zafra),
       };
     case "destileria":
       return {
@@ -27,7 +27,6 @@ function getRangoFechas(ingenio, tipo) {
 // Filtra un dataset por ingenio y rango
 function filtrarDatasetPorIngenio(dataset, ingenio, tipo) {
   const { inicio, fin } = getRangoFechas(ingenio, tipo);
-
   return dataset.filter(item => {
     if (item.ingenioNombre !== ingenio.nombre_ingenio) return false;
 

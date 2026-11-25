@@ -6,6 +6,7 @@ import ListHeader from "../ListHeader";
 import ListadoDatos from "../ParteDiario/ListadoDatos";
 import ColumnasDatosHistoricos from "../../components/Reportes/columnasDatosHistoricos.json";
 import { dataRegistro1 } from "./DataReporte1";
+import { tienePermiso } from "../../utils/permisos";
 
 const DatosHistoricosZafra = ({
   dataZafraInicio,
@@ -75,6 +76,7 @@ const DatosHistoricosZafra = ({
         <ListadoDatos columns={ColumnasDatosHistoricos.columns} scroll={30} data={dataTabla}/>
       </Row>
       )}
+      {tienePermiso(dataUser, "reportes.exportar") && (
       <Row className="d-flex justify-content-start align-items-center pt-2 px-0">
         <Col xs={12} className="text-start mb-3 mt-2">
           <Button
@@ -119,6 +121,7 @@ const DatosHistoricosZafra = ({
           </Button>
         </Col>
       </Row>
+      )}
     </Container>
   );
 };

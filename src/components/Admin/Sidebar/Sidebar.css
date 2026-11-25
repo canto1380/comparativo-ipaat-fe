@@ -46,6 +46,21 @@
   box-shadow: 0 0 10px rgba(0, 194, 168, 0.5);
   padding: 8px 0px;
 }
+
+.sidebar-mi-cuenta {
+  display: inline-block;
+  margin-top: 2px;
+  font-size: 11px;
+  line-height: 1.2;
+  color: #9fa8da;
+  text-decoration: none;
+  transition: color 0.25s ease;
+}
+
+.sidebar-mi-cuenta:hover {
+  color: #00c2a8;
+  text-decoration: underline;
+}
 .sizeIcon {
   font-size: 20px;
   min-width: 24px;

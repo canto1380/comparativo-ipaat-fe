@@ -18,6 +18,7 @@ import { getIngenios } from "../../utils/queryAPI/ingenios";
 import { getPeriodoZafra } from "../../utils/queryAPI/periodosZafra";
 import { toast } from "react-toastify";
 import BtnDescargar from "../../components/Botones/BtnDescargar";
+import { tienePermiso } from "../../utils/permisos";
 
 const DiasParadaContainer = ({ tokenAuth, routeAPI }) => {
   const [diasParadas, setDiasParadas] = useState(null);
@@ -165,10 +166,12 @@ const DiasParadaContainer = ({ tokenAuth, routeAPI }) => {
     },
     {
       key: "actions",
-      tittle: "Acciones",
+      title: "Acciones",
+      align: "right",
+      className: "acciones-columna",
       render: (record) => {
         return (
-          <Space size="middle">
+          <Space size="small" className="d-flex justify-content-end">
             <Button
               className="bg-secondary btn-edit"
               href={`/admin/dias-parada/editar/${record?.id}`}
@@ -235,7 +238,7 @@ const DiasParadaContainer = ({ tokenAuth, routeAPI }) => {
   return (
     <Container fluid>
       <TitlePage titlePage={"Días Parada"} />
-      <hr className="mx-3 mt-1" />
+      <hr className="menu-divider" />
       {diasParadas === null ? (
         <div className="d-flex justify-content-center align-items-center text-center">
           <Spinn type="data" />
@@ -262,19 +265,21 @@ const DiasParadaContainer = ({ tokenAuth, routeAPI }) => {
             zafraOpcionTodos={true}
           />
 
-          <BtnDescargar
-            enabled={!!anioZafra && !!diasParadas}
-            loading={loadingDownloadReport}
-            processing={!diasParadas}
-            onClick={exportarDiasParadas}
-            text="Descargar informe"
-          />
+          {tienePermiso(dataUser, "dias_parada.exportar") && (
+            <BtnDescargar
+              enabled={!!anioZafra && !!diasParadas}
+              loading={loadingDownloadReport}
+              processing={!diasParadas}
+              onClick={exportarDiasParadas}
+              text="Descargar informe"
+            />
+          )}
 
           <ListHeader
             title={"Paradas de los ingenios"}
-            btnLink={"/admin/dias-parada/nuevo"}
+            btnLink={tienePermiso(dataUser, "dias_parada.editar") ? "/admin/dias-parada/nuevo" : null}
           />
-          <div className="pb-1 pt-3 px-4">
+          <div className="menu-table-wrap">
             <ListadoDatos
               columns={columnsData}
               scroll={100}

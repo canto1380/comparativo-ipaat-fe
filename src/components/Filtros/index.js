@@ -28,7 +28,9 @@ import { getAnios } from "../../utils/queryAPI/anios";
 import { getMeses } from "../../utils/queryAPI/meses";
 import { getIngenios } from "../../utils/queryAPI/ingenios";
 import { getQuincenas } from "../../utils/queryAPI/quincenas";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
+import { User } from "../../context/UserProvider";
+import { ingenioFijo } from "../../utils/permisos";
 import './filtros.css'
 import { getRegion } from "../../utils/queryAPI/region";
 import FiltrosDDJJ from "../DDJJ/FiltrosDDJJ";
@@ -107,6 +109,9 @@ const Filtros = ({
   const [dataMeses, setDataMeses] = useState(null);
   const [dataQuincenas, setDataQuincenas] = useState(null);
   const [dataIngenios, setDataIngenios] = useState(null);
+  const [ingenioBloqueado, setIngenioBloqueado] = useState(undefined);
+  const { dataUser } = useContext(User);
+  const idIngenioFijo = ingenioFijo(dataUser);
   const [dataRegiones, setDataRegiomes] = useState(null)
 
   useEffect(() => {
@@ -121,6 +126,13 @@ const Filtros = ({
     const paramsIngenios = { region: bandFilterIngenioRegion }
     const ingeniosData = await getIngenios(bandFilterIngenioRegion && paramsIngenios);
     const regionData = await getRegion()
+    if (idIngenioFijo && setIngenio && Array.isArray(ingeniosData)) {
+      const propio = ingeniosData.find((d) => Number(d.id) === idIngenioFijo);
+      if (propio) {
+        setIngenioBloqueado(propio.nombre_ingenio);
+        setIngenio(propio.nombre_ingenio);
+      }
+    }
 
     setDataAnios(aniosData);
     setDataMeses(mesesData);
@@ -211,8 +223,11 @@ const Filtros = ({
     optionsQuincena.push(option);
   });
 
-  let optionsIngenios = [{ value: "", label: "Todos" }];
-  dataIngenios?.forEach((d) => {
+  let optionsIngenios = idIngenioFijo ? [] : [{ value: "", label: "Todos" }];
+  const ingeniosVisibles = idIngenioFijo
+    ? dataIngenios?.filter((d) => Number(d.id) === idIngenioFijo)
+    : dataIngenios;
+  ingeniosVisibles?.forEach((d) => {
     const option = {
       value: d.nombre_ingenio,
       label: d.nombre_ingenio,
@@ -255,15 +270,14 @@ const Filtros = ({
     <div className={`${fixedComponent ? 'position-sticky top-0 bg-white' : ''} `} style={{ zIndex: 1000 }}>
       {bandTitlePrincipal && (
         <Row>
-          <Col className="mt-3">
-            <div className={`pt-1 pb-0 px-4`}>
-              <p className="fw-bolder">Filtros información</p>
+          <Col className="mt-1">
+            <div className="pt-0 pb-0 px-4">
+              <p className="fw-bolder mb-1">Filtros información</p>
             </div>
           </Col>
         </Row>
-
       )}
-      <Row className="d-flex justify-content-start align-items-center pb-1 px-4">
+      <Row className="d-flex justify-content-start align-items-center pb-0 px-4">
         {/* FILTRO GENERICO PARA EL ANIO DE ZAFRA */}
         {bandFilterZafraAnio && (
           <Col xs={12} md={6} lg={3} className="mb-1 mt-1">
@@ -315,10 +329,9 @@ const Filtros = ({
               }}
               placeholder="Busque o seleccione"
               optionFilterProp="label"
-              // filterOption={(input, option) =>
-              //   (option?.label ?? "").includes(input)
-              // }
               options={optionsIngenios}
+              disabled={Boolean(idIngenioFijo)}
+              {...(idIngenioFijo ? { value: ingenioBloqueado } : {})}
             />
           </Col>
         )}

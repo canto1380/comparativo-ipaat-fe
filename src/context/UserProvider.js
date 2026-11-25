@@ -1,5 +1,5 @@
-import React, { createContext, useReducer } from 'react'
-import { getTokenLS, getDataToken, setToken, setDataToken, deleteToken, deleteCookies } from '../helpers/helpers'
+import React, { createContext, useEffect, useReducer } from 'react'
+import { getTokenLS, getDataToken, getRefreshToken, setToken, setDataToken, setRefreshToken, deleteToken, deleteCookies } from '../helpers/helpers'
 export const User = createContext()
 
 // Inicializar el estado desde localStorage
@@ -9,22 +9,23 @@ const userDataLS = getDataToken()
 const initialState = {
   token: tokenLS || null,
   user: userDataLS || null,
-  // Mantener compatibilidad con código existente que verifica userToken
+  refreshToken: getRefreshToken() || null,
   userToken: tokenLS || '',
 }
 
 function reducer(state, action) {
   switch (action.type) {
     case 'LOGIN': {
-      const { token, user } = action.payload
-      // Guardar en localStorage
+      const { token, user, refreshToken } = action.payload
       setToken(token)
-      setDataToken(user)
+      if (user) setDataToken(user)
+      if (refreshToken) setRefreshToken(refreshToken)
       return {
         ...state,
         token,
-        user,
-        userToken: token, // Mantener compatibilidad
+        user: user || state.user,
+        refreshToken: refreshToken || state.refreshToken,
+        userToken: token,
       }
     }
     case 'LOGOUT': {
@@ -44,10 +45,20 @@ function reducer(state, action) {
 
 const UserProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState)
+
+  useEffect(() => {
+    const onSession = (event) => {
+      const { token, refreshToken, user } = event.detail || {}
+      if (!token) return
+      dispatch({ type: 'LOGIN', payload: { token, refreshToken, user } })
+    }
+    window.addEventListener('ipaat-session', onSession)
+    return () => window.removeEventListener('ipaat-session', onSession)
+  }, [])
   
   // Funciones helper para login y logout
-  const login = (token, user) => {
-    dispatch({ type: 'LOGIN', payload: { token, user } })
+  const login = (token, user, refreshToken) => {
+    dispatch({ type: 'LOGIN', payload: { token, user, refreshToken } })
   }
   
   const logout = () => {
