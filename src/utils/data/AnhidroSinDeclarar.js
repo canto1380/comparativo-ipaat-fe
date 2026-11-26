@@ -40,6 +40,10 @@ export const anhidroBellaVista = [
     { zafra: 2025, anio: 2025, mesNumero: 9, mesNombre: 'septiembre', valor: 999218 },
     { zafra: 2025, anio: 2025, mesNumero: 10, mesNombre: 'octubre', valor: 1971143},
     { zafra: 2025, anio: 2025, mesNumero: 11, mesNombre: 'noviembre', valor: 1098950},
+    { zafra: 2026, anio: 2026, mesNumero: 7, mesNombre: 'julio', valor: 754341},
+    { zafra: 2026, anio: 2026, mesNumero: 8, mesNombre: 'agosto', valor: 800136},
+    { zafra: 2026, anio: 2026, mesNumero: 9, mesNombre: 'septiembre', valor: 1130477},
+    { zafra: 2026, anio: 2026, mesNumero: 10, mesNombre: 'octubre', valor: 1039838},
 ];
 
 // Datos de anhidro 2023 (valores acumulados)
@@ -52,4 +56,6 @@ export const anhidroConcepcion2024 = 63508852
 export const anhidroBellaVista2024 = 14796761
 
 export const anhidroBellaVista2025 = 7382750
+
+export const anhidroBellaVista2026 = 3724792
 

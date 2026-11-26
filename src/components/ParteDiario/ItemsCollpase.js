@@ -36,7 +36,7 @@ const INGENIOS_ORDER = [
   "La Trinidad",
   "Leales",
   "Marapa",
-  "Santa Barbara",
+  "Santa Bárbara",
   "Santa Rosa",
   "Ñuñorco",
   "La Esperanza",
@@ -45,6 +45,13 @@ const INGENIOS_ORDER = [
   "San Isidro",
   "Seaboard",
 ];
+
+const normalizeIngenioNombre = (nombre) =>
+  (nombre || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim()
+    .toLowerCase();
 
 const parseDate = (v) => {
   if (!v) return null;
@@ -266,6 +273,7 @@ const buildFinalRowsWithTotals = (rowsQuincena, rowsMes, rowsZafra) => {
 const alcoholAnhidroNoDeclarado = [
   ["Concepción", 2024, 63508852],
   ["Concepción", 2023, 35668460],
+  ["Bella Vista", 2026, 3724792],
   ["Bella Vista", 2025, 7382750],
   ["Bella Vista", 2024, 14796761],
   ["Bella Vista", 2023, 9669715],
@@ -362,12 +370,24 @@ const ItemsCollapse = ({
   // Construir items para Collapse manteniendo el orden INGENIOS_ORDER (y añadiendo los que no estén al final)
   const items = useMemo(() => {
     const entries = [];
+    const usados = new Set();
+    const nombresProcesados = Object.keys(ingeniosProcesados);
 
-    // Helper to push an ingenio if exists in processed set
-    const pushIfExists = (nombre) => {
-      if (!ingeniosProcesados[nombre]) return;
+    const resolverNombre = (nombreOrden) => {
+      if (ingeniosProcesados[nombreOrden]) return nombreOrden;
+      const normalizado = normalizeIngenioNombre(nombreOrden);
+      return nombresProcesados.find(
+        (n) => normalizeIngenioNombre(n) === normalizado
+      );
+    };
+    
+    const pushIfExists = (nombreOrden) => {
+      const nombre = resolverNombre(nombreOrden);
+      if (!nombre || usados.has(nombre)) return;
+      
       const data = ingeniosProcesados[nombre];
-      const observacion = observaciones(nombre, dataZafra)
+      const observacion = observaciones(nombre, dataZafra);
+      usados.add(nombre);
 
       const label = observacion ? (
         <div>
@@ -392,14 +412,14 @@ const ItemsCollapse = ({
     });
 
     // Añadir cualquier ingenio que venga pero no esté en el order (por si hay nuevos)
-    Object.keys(ingeniosProcesados).forEach((nombre) => {
-      if (!INGENIOS_ORDER.includes(nombre)) {
+    nombresProcesados.forEach((nombre) => {
+      if (!usados.has(nombre)) {
         pushIfExists(nombre);
       }
     });
 
     return entries;
-  }, [ingeniosProcesados]);
+  }, [ingeniosProcesados, dataZafra]);
   return (
     <Collapse
       bordered={false}

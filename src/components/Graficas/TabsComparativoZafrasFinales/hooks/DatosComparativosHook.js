@@ -574,8 +574,6 @@ export const datosComparativosHook = (
   const lealesPeriodo = periodosAnioStart?.find((d) => d.nombre_ingenio === "Leales");
   const lealesPeriodoEnd = periodosAnioEnd?.find((d) => d.nombre_ingenio === "Leales");
 
-  console.log(periodosAnioStart)
-  console.log(periodosAnioEnd)
   const nunorcoPeriodo = periodosAnioStart?.find(
     (d) => d.nombre_ingenio === "Ñuñorco"
   );
