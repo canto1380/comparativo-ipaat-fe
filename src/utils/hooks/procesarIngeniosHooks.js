@@ -1,6 +1,14 @@
 // Convierte fecha string en Date
 const toDate = (str) => str ? new Date(str) : null;
 
+// Unifica nombres (p.ej. "Santa Barbara" vs "Santa Bárbara")
+const normalizeIngenioNombre = (nombre) =>
+  (nombre || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .trim()
+    .toLowerCase();
+
 // Obtiene el rango correcto según el tipo
 function getRangoFechas(ingenio, tipo) {
   switch (tipo) {
@@ -27,8 +35,9 @@ function getRangoFechas(ingenio, tipo) {
 // Filtra un dataset por ingenio y rango
 function filtrarDatasetPorIngenio(dataset, ingenio, tipo) {
   const { inicio, fin } = getRangoFechas(ingenio, tipo);
+  const nombreIngenio = normalizeIngenioNombre(ingenio.nombre_ingenio);
   return dataset.filter(item => {
-    if (item.ingenioNombre !== ingenio.nombre_ingenio) return false;
+    if (normalizeIngenioNombre(item.ingenioNombre) !== nombreIngenio) return false;
 
     const fechaParte = new Date(item.fechaParte);
 

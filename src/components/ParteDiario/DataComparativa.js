@@ -1541,6 +1541,74 @@ export const dataComparativaPorTipo = (
       };
     }
   });
+
+
+  // ANHIDRO POR DOCUMENTO PARA AÑO 2026 (comparativa al ver zafra 2027)
+  if (zafraParteDiario - 1 === 2026 && dataEnd !== null) {
+    const currentDate = new Date(dataEnd);
+    const anioData = currentDate.getFullYear() - 1;
+    currentDate.setFullYear(anioData);
+    const currentMonth = currentDate.getMonth() + 1;
+    const currentDay = currentDate.getDate();
+    const zafraComparativa = 2026;
+
+    // Destilería Bella Vista - Zafra 2026
+    anhidroBellaVista.forEach((mes) => {
+      if (mes.zafra !== zafraComparativa) return;
+
+      if (
+        mes.anio < anioData ||
+        (mes.anio === anioData && mes.mesNumero < currentMonth)
+      ) {
+        h21 += mes.valor;
+      } else if (
+        mes.anio === anioData &&
+        mes.mesNumero === currentMonth
+      ) {
+        h21 += (mes.valor / 30) * currentDay;
+      }
+    });
+
+    dataDestBellaVista = {
+      AH27: h21,
+      AA27: dataDestBellaVista.AA27,
+      AG27: dataDestBellaVista.AG27,
+    };
+  }
+
+  // ANHIDRO POR DOCUMENTO PARA AÑO 2025 (comparativa al ver zafra 2026)
+  if (zafraParteDiario - 1 === 2025 && dataEnd !== null) {
+    const currentDate = new Date(dataEnd);
+    const anioData = currentDate.getFullYear() - 1;
+    currentDate.setFullYear(anioData);
+    const currentMonth = currentDate.getMonth() + 1;
+    const currentDay = currentDate.getDate();
+    const zafraComparativa = 2025;
+
+    // Destilería Bella Vista - Zafra 2025
+    anhidroBellaVista.forEach((mes) => {
+      if (mes.zafra !== zafraComparativa) return;
+
+      if (
+        mes.anio < anioData ||
+        (mes.anio === anioData && mes.mesNumero < currentMonth)
+      ) {
+        h21 += mes.valor;
+      } else if (
+        mes.anio === anioData &&
+        mes.mesNumero === currentMonth
+      ) {
+        h21 += (mes.valor / 30) * currentDay;
+      }
+    });
+
+    dataDestBellaVista = {
+      AH27: h21,
+      AA27: dataDestBellaVista.AA27,
+      AG27: dataDestBellaVista.AG27,
+    };
+  }
+
   // Agregar anhidro por documento para años 2024 y 2023
   if (zafraParteDiario - 1 === 2024 && dataEnd !== null) {
     const currentDate = dataEnd !== null ? new Date(dataEnd) : new Date();  // Muestra fecha actual
@@ -1587,7 +1655,7 @@ export const dataComparativaPorTipo = (
         (mes.anio === anioData && mes.mesNumero < currentMonth)
       ) {
         h4 += mes.valor;
-        
+
       }
 
       // Mes actual (mismo año y mes)
@@ -1597,7 +1665,7 @@ export const dataComparativaPorTipo = (
       ) {
         const valorProporcional = (mes.valor / 30) * currentDay;
         h4 += valorProporcional;
-        
+
       }
 
     });
@@ -1609,25 +1677,22 @@ export const dataComparativaPorTipo = (
 
     // Bella Vista - Zafra 2024
     anhidroBellaVista.forEach((mes) => {
+      if (mes.zafra !== 2024) return;
+
       // Mes completamente anterior a la fecha fin
       if (
         mes.anio < anioData ||
         (mes.anio === anioData && mes.mesNumero < currentMonth)
       ) {
         h6 += mes.valor;
-        
       }
-
       // Mes actual (mismo año y mes)
       else if (
         mes.anio === anioData &&
         mes.mesNumero === currentMonth
       ) {
-        const valorProporcional = (mes.valor / 30) * currentDay;
-        h6 += valorProporcional;
-        
+        h6 += (mes.valor / 30) * currentDay;
       }
-
     });
     dataBellaVista = {
       AH17: h6,
@@ -2916,6 +2981,7 @@ export const dataComparativaPorTipo = (
   setDc13(dataStaBarbara);
   setDc14(dataStaRosa);
   setDc15(dataSanJuan);
+  setDataDestBellaVistaComparativa(dataDestBellaVista);
   setNc1(dataLaEsperanza);
   setNc2(dataLedesma);
   setNc3(dataRioGrande);

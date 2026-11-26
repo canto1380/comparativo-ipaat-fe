@@ -1559,6 +1559,69 @@ export const dataPorTipo = (
   });
 
   // AGREGAR ANHIDRO POR DOCUMENTO PARA AÑOS 2025 2024 Y 2023
+
+  // ANHIDRO POR DOCUMENTO PARA AÑOS 2026
+  if (zafraParteDiario === 2026 && dataEnd !== null) {
+    const currentDate = dataEnd !== null ? new Date(dataEnd) : new Date();
+    const currentMonth = currentDate.getMonth() + 1; // getMonth() devuelve 0-11
+    const currentDay = currentDate.getDate();
+
+
+    if (dataEnd.getFullYear() === 2026) {
+      // Bella Vista - Zafra 2026
+      anhidroBellaVista.forEach((anhidro) => {
+        if (anhidro.anio === 2026 && anhidro.zafra === 2026 && anhidro.mesNumero < currentMonth) {
+          r21 = r21 + anhidro.valor;
+          dataDestBellaVista = {
+            R59: r21,
+            N27: dataDestBellaVista.N27,
+            O59: dataDestBellaVista.O59
+          }
+        }
+        if (anhidro.anio === 2026 && anhidro.zafra === 2026 && anhidro.mesNumero === currentMonth) {
+          let valorPorcentualPorDia = (anhidro.valor / 30) * currentDay;
+          r21 = r21 + valorPorcentualPorDia;
+          dataDestBellaVista = {
+            R59: r21,
+            N27: dataDestBellaVista.N27,
+            O59: dataDestBellaVista.O59
+          }
+        }
+      })
+    }
+    if (dataEnd.getFullYear() === 2027) {
+      // Bella Vista - Zafra 2026
+      anhidroBellaVista.forEach((anhidro) => {
+        if (anhidro.anio === 2026 && anhidro.zafra === zafraParteDiario) {
+          r21 = r21 + anhidro.valor;
+          dataDestBellaVista = {
+            R59: r21,
+            N27: dataDestBellaVista.N27,
+            O59: dataDestBellaVista.O59
+          }
+        }
+        if (anhidro.zafra === zafraParteDiario && anhidro.anio === 2027 && anhidro.mesNumero < currentMonth) {
+          r21 = r21 + anhidro.valor;
+          dataDestBellaVista = {
+            R59: r21,
+            N27: dataDestBellaVista.N27,
+            O59: dataDestBellaVista.O59
+          }
+        }
+        if (anhidro.zafra === zafraParteDiario && anhidro.anio === 2027 && anhidro.mesNumero === currentMonth) {
+          let valorPorcentualPorDia = (anhidro.valor / 30) * currentDay;
+          r21 = r21 + valorPorcentualPorDia;
+          dataDestBellaVista = {
+            R59: r21,
+            N27: dataDestBellaVista.N27,
+            O59: dataDestBellaVista.O59
+          }
+        }
+      })
+    }
+  }
+
+  // ANHIDRO POR DOCUMENTO PARA AÑOS 2025
   if (zafraParteDiario === 2025 && dataEnd !== null) {
     const currentDate = dataEnd !== null ? new Date(dataEnd) : new Date();
     const currentMonth = currentDate.getMonth() + 1; // getMonth() devuelve 0-11
@@ -1616,7 +1679,6 @@ export const dataPorTipo = (
         }
       })
     }
-
   }
 
   if (zafraParteDiario === 2024 && dataEnd !== null) {
@@ -2939,7 +3001,7 @@ export const dataPorTipo = (
       const calculoAntiguoRefinado = zafraParteDiario < 2026
         ? h17 + (newDate <= new Date(dataInicioIngeniosNorte.CellF45) && data.azucarRefinado)
         : h17 + data.azucarRefinado
-      
+
       h17 = calculoAntiguoRefinado
 
       /** PARCHE PARA ZAFRA 2024 y 2025  - AZUCAR CRUDO **/
