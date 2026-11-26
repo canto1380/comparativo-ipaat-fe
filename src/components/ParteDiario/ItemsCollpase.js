@@ -298,11 +298,10 @@ const observaciones = (nombre, dataZafra) => {
   if (nombre === "Ledesma" && dataZafra === 2024) {
     observacion = (
       <>
-        Az. Crudo Final: Az. Crudo (280.697) - Az. Refinado (310.020) - Otros Az. (2.570) <br />
-        Az. Crudo Final: -18.068 [t]<br />
-        Az. Refinado: 319.192 [t]<br />
-        Otros AZ.: 3.063 [t]<br />
-        Az. Físico Total: 304.187 [t]<br />
+        Az. Crudo Final: 104.971 [t]<br />
+        Az. Refinado: 173.156 [t]<br />
+        Otros AZ.: 2.570 [t]<br />
+        Az. Físico Total: 280.697 [t]<br />
       </>
     )
   }
